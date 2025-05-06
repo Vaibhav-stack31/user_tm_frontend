@@ -111,7 +111,7 @@ function Page() {
                     <div className="w-full h-78 bg-linear-to-b from-[#018ABE] to-[#004058] rounded-2xl relative shadow-xl mb-8">
                         <Image src="/profile/lock.png" alt="Lock Icon" width={107} height={107} className="absolute opacity-50 top-4 left-4 -rotate-[19.89deg]" />
                         <Image src="/profile/Vector92.png" alt="Vector" width={57} height={69} className="absolute opacity-50 bottom-8 left-8" />
-                        <Image src={profile.photoUrl || "/profile/PP.png"} alt="Profile Picture" width={1000} height={1000} className="absolute top-10 left-[10%] h-[220px] w-[235px] object-cover rounded-full" />
+                        <Image src={profile.photoUrl || "/profile.png"} alt="Profile Picture" width={1000} height={1000} className="absolute top-10 left-[10%] h-[220px] w-[235px] object-cover rounded-full" />
                         <Image src="/profile/flagVector.png" alt="Flag Vector" width={49} height={71} className="absolute opacity-50 top-10 left-[33%]" />
                         <Image src="/profile/pencil.png" alt="Vector" width={113} height={147} className="absolute opacity-50 top-6 left-[45%]" />
                         <Image src="/profile/key.png" alt="Key Icon" width={151} height={150} className="absolute opacity-50 bottom-2 left-[35%]" />

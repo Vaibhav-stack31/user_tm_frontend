@@ -16,7 +16,7 @@ export default function PunchHistory() {
       punchIn: "",
       punchOutLocation: "",
       punchOut: "",
-      remark: "Present"
+      remark: ""
     }
   ]);
 
@@ -25,6 +25,7 @@ export default function PunchHistory() {
       try {
         const response = await axiosInstance("/attendance/punchHistory");
         setPunchData(response?.data || []);
+        console.log(punchData.punchOut);
       } catch (error) {
         console.error("Failed to fetch punch data:", error);
         toast.error("Failed to fetch punch data.", { duration: 2000 });
@@ -47,14 +48,18 @@ export default function PunchHistory() {
   );
 
   const formatDate = (dateStr) => {
+    if (!dateStr) return "";
     const date = new Date(dateStr);
-    return isNaN(date) ? "" : date.toLocaleDateString("en-IN");
+    return isNaN(date.getTime()) ? "" : date.toLocaleDateString("en-IN");
   };
 
+
   const formatTime = (dateStr) => {
+    if (!dateStr) return ""; // check for null, undefined, or 0
     const date = new Date(dateStr);
-    return isNaN(date) ? "" : date.toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit' });
+    return isNaN(date.getTime()) ? "" : date.toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit' });
   };
+
 
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(filteredData);
@@ -156,7 +161,7 @@ export default function PunchHistory() {
         <div className="flex justify-end mt-4 mr-10">
           <button
             onClick={exportToExcel}
-            className="bg-[#058CBF] text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-[#058CBF] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
           >
             Export
           </button>

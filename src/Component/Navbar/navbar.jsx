@@ -234,7 +234,7 @@ export default function NavBar() {
               <div className="py-2">
                 <button
                   onClick={() => handleProfileAction('view-profile')}
-                  className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100"
+                  className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100 cursor-pointer"
                 >
                   <FaUser className="text-gray-600" />
                   <Link href="/profile">
