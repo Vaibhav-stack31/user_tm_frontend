@@ -47,8 +47,8 @@ const PerformanceSummary = ({ selected = 'This Year' }) => {
   const data = performanceDataMap[selected] || performanceDataMap['This Year'];
 
   return (
-    <div className="w-auto h-[390px] bg-white rounded-2xl shadow-md p-4 font-sans">
-      <h2 className="text-lg font-semibold mb-4">PERFORMANCE SUMMARY</h2>
+    <div className="w-auto h-[390px] bg-white rounded-2xl shadow-[1px_4px_10px_lightgray] p-4 font-sans">
+      <h2 className="text-xl font-bold mb-4">PERFORMANCE SUMMARY</h2>
 
       <div className="flex items-center space-x-4 mb-2 ml-2">
         <div className="flex items-center text-xs">
