@@ -3,6 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 const menuItems = [
   { label: 'Dashboard', img: '/dashboard.png', href: '/dashboard' },
@@ -16,6 +17,8 @@ const menuItems = [
 ]
 
 export default function Sidebar() {
+  const pathname = usePathname()
+
   return (
     <div className="fixed min-h-screen w-1/6 bg-gradient-to-b from-[#018ABE] from-15% via-[#65B7D4] to-[#E0E2E3] text-white flex flex-col items-center py-6">
 
@@ -32,18 +35,23 @@ export default function Sidebar() {
 
       {/* Menu */}
       <nav className="flex flex-col gap-2 w-full px-4">
-        {menuItems.map((item, index) => (
-          <Link
-            key={index}
-            href={item.href}
-            className="flex items-center gap-4 px-3 py-2 hover:bg-white hover:text-sky-700 rounded-lg transition duration-200"
-          >
-            <div className="w-6 h-6 flex items-center justify-center">
-              <Image src={item.img} alt={item.label} width={24} height={24} />
-            </div>
-            <span className="text-md font-medium">{item.label}</span>
-          </Link>
-        ))}
+        {menuItems.map((item, index) => {
+          const isActive = pathname === item.href
+          return (
+            <Link
+              key={index}
+              href={item.href}
+              className={`flex items-center gap-4 px-3 py-2 rounded-lg transition duration-200 ${
+                isActive ? 'bg-white text-sky-700' : 'hover:bg-white hover:text-sky-700'
+              }`}
+            >
+              <div className="w-6 h-6 flex items-center justify-center">
+                <Image src={item.img} alt={item.label} width={24} height={24} />
+              </div>
+              <span className="text-md font-medium">{item.label}</span>
+            </Link>
+          )
+        })}
       </nav>
     </div>
   )

@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { FaRegBell } from "react-icons/fa6";
 import {
-  FaBell,
+  
   FaVideo,
   FaUser,
   FaCog,
@@ -50,14 +51,14 @@ export default function NavBar() {
   return (
     <div className="bg-gradient-to-r  from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] px-6 py-3  flex items-center min-w-full relative">
       {/* Centered Welcome Message */}
-      <h1 className="text-3xl font-bold text-black absolute left-10 transform whitespace-nowrap">
+      <h1 className="text-3xl font-bold text-white absolute left-10 transform whitespace-nowrap">
         Welcome {userData.firstName || 'Guest'}!
       </h1>
 
       <div className="ml-auto flex items-center gap-12 mr-10">
         {/* Video Icon */}
         <button title="Video Call" onClick={toggleMeetingPopup}>
-          <FaVideo className="w-5 h-5 text-black cursor-pointer" />
+          <FaVideo className="w-6 h-7 text-gray-50 cursor-pointer" />
         </button>
 
         {/* Video Call Popup */}
@@ -158,33 +159,25 @@ export default function NavBar() {
         )}
 
         {/* Notification Icon */}
-        <div className="relative">
-          <button
-            title="Notifications"
-            onClick={() => {
-              setShowNotifications(!showNotifications);
-              setShowProfileMenu(false);
-            }}
-            className="relative cursor-pointer"
-          >
-            <FaBell className="w-5 h-5 text-black" />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {notifications.length}
-            </span>
-          </button>
 
-          {/* Notifications Dropdown */}
+        <div className="relative">
+          <FaRegBell
+            className="cursor-pointer text-gray-50 w-10 h-6"
+            onClick={() => setShowNotifications((prev) => !prev)}
+          />
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg z-10">
+            <div className="absolute right-0 top-10 w-80 bg-white rounded-lg shadow-lg z-20">
               <div className="p-4 font-semibold border-b">Notifications</div>
-              <div className="p-4 text-gray-500 text-sm">
-                {notifications.length === 0
-                  ? 'No new notifications'
-                  : notifications.map((note, idx) => (
+              <div className="p-4 text-gray-600 text-sm max-h-60 overflow-y-auto">
+                {notifications.length === 0 ? (
+                  <div>No new notifications</div>
+                ) : (
+                  notifications.map((note, idx) => (
                     <div key={idx} className="mb-2">
                       {note}
                     </div>
-                  ))}
+                  ))
+                )}
               </div>
             </div>
           )}
