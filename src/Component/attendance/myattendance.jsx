@@ -8,6 +8,7 @@ import { TbDoorExit, TbDoorEnter } from 'react-icons/tb';
 import { LuAlarmClock } from "react-icons/lu";
 import { axiosInstance } from '@/lib/axiosInstance';
 import toast from 'react-hot-toast';
+import { useGSAP } from '@gsap/react';
 
 export default function AttendancePage() {
   const [currentDate, setCurrentDate] = useState('');
@@ -25,7 +26,7 @@ export default function AttendancePage() {
   const underlineRef = useRef(null);
   const router = useRouter();
 
-  useEffect(() => {
+  useGSAP(() => {
     if (underlineRef.current) {
       gsap.fromTo(
         underlineRef.current,
@@ -200,14 +201,30 @@ export default function AttendancePage() {
 
       <div className="flex items-center justify-center bg-white p-4">
         <div className="bg-white rounded-xl w-full max-w-5xl p-6 border-2 border-gray-300 relative">
-          <div className="flex justify-between items-center mx-20 mb-6">
-            <button className="bg-[#F4F5FD] px-4 py-2 text-2xl rounded-xl shadow-md font-semibold">
-              {currentDate}
-            </button>
-            <div className="w-17 h-17 rounded-full overflow-hidden">
-              <Image src="/profile.png" alt="avatar" width={70} height={70} />
-            </div>
-          </div>
+        <div className="flex items-center mx-20 mb-6">
+  <button className="bg-[#F4F5FD] px-4 py-2 text-2xl rounded-xl shadow-md font-semibold">
+    {currentDate}
+  </button>
+
+  {/* Spacer */}
+  <div className="flex-1" />
+
+  {/* Centered Profile Image */}
+  <div className="w-[70px] h-[70px] rounded-full flex justify-center items-center overflow-hidden">
+    <Image src="/profile.png" alt="avatar" width={70} height={70} />
+  </div>
+
+  {/* Spacer */}
+  <div className="flex-1" />
+
+  <button
+    onClick={() => router.push('/punchhistory')}
+    className="bg-[#058CBF] text-white px-4 py-2 rounded cursor-pointer hover:bg-[#69b0c9]"
+  >
+    Punch History
+  </button>
+</div>
+
 
           <hr className="h-0.5 bg-gray-400 border-0" />
 
@@ -230,7 +247,7 @@ export default function AttendancePage() {
               <button
                 onClick={handlePunchIn}
                 disabled={hasPunchedIn || isPunchingIn}
-                className="flex items-center bg-[#058CBF] text-lg text-white px-6 py-2 rounded hover:bg-cyan-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+                className="flex items-center bg-[#058CBF] text-lg text-white ml-5 px-6 py-2 rounded hover:bg-cyan-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
               >
                 <LuAlarmClock className="mr-2" />
                 {isPunchingIn ? 'Punching In...' : 'Punch In'}
@@ -253,12 +270,7 @@ export default function AttendancePage() {
               <div className="bg-[#F4F5FD] p-2 rounded-md shadow-md min-w-[80px]">
                 {outTime || '--:--:--'}
               </div>
-              <button
-                onClick={() => router.push('/punchhistory')}
-                className="ml-auto bg-[#058CBF] text-white px-4 py-2 rounded cursor-pointer hover:bg-[#69b0c9]"
-              >
-                Punch History
-              </button>
+             
             </div>
 
             <div className="flex items-center gap-2">
