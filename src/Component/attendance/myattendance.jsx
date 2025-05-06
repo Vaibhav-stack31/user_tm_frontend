@@ -15,8 +15,6 @@ export default function AttendancePage() {
   const [inLocation, setInLocation] = useState('');
   const [outTime, setOutTime] = useState('');
   const [outLocation, setOutLocation] = useState('');
-  const [elapsed, setElapsed] = useState(0);
-  const intervalRef = useRef(null);
   const [hasPunchedIn, setHasPunchedIn] = useState(false);
   const [hasPunchedOut, setHasPunchedOut] = useState(false);
   const [isPunchingIn, setIsPunchingIn] = useState(false);
@@ -45,16 +43,9 @@ export default function AttendancePage() {
 
         if (data.punchedIn) {
           const punchInDate = new Date(data.punchInTime);
-          const elapsedSeconds = Math.floor((Date.now() - punchInDate.getTime()) / 1000);
-
           setHasPunchedIn(true);
           setInTime(formatTime(punchInDate));
           setInLocation(data.punchInLocation || 'Unknown');
-
-          if (!data.punchedOut) {
-            setElapsed(elapsedSeconds);
-            startElapsedTimer(punchInDate); // continue timer
-          }
         }
 
         if (data.punchedOut) {
@@ -62,7 +53,6 @@ export default function AttendancePage() {
           const punchOutDate = new Date(data.punchOutTime);
           setOutTime(formatTime(punchOutDate));
           setOutLocation(data.punchOutLocation || 'Unknown');
-          stopElapsedTimer(); // stop timer if already punched out
         }
       } catch (error) {
         console.error('Failed to fetch today’s attendance:', error);
@@ -71,8 +61,6 @@ export default function AttendancePage() {
 
     checkTodayAttendance();
   }, []);
-
-
 
   useEffect(() => {
     const dateStr = new Date().toLocaleDateString('en-GB');
@@ -111,7 +99,6 @@ export default function AttendancePage() {
       setInTime(formatTime(now));
       setInLocation(location);
       setHasPunchedIn(true);
-      startElapsedTimer();
 
       try {
         await axiosInstance.post("/attendance/punch-in", {
@@ -121,7 +108,7 @@ export default function AttendancePage() {
         toast.success('Punched in successfully!');
       } catch (error) {
         console.error('Failed to punch in:', error);
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || 'Punch in failed.');
       } finally {
         setIsPunchingIn(false);
       }
@@ -137,8 +124,10 @@ export default function AttendancePage() {
       const location = await fetchLocation(latitude, longitude);
       const now = new Date();
 
+      const punchInDate = new Date();
+      const elapsed = (now - punchInDate) / 1000;
+
       if (elapsed < 270) {
-        // Show modal and delay punch-out state change
         setPendingPunchOutData({
           punchOutTime: now.toISOString(),
           punchOutLocation: location,
@@ -148,18 +137,16 @@ export default function AttendancePage() {
         return;
       }
 
-      // Normal punch out (>= 4.5 hours)
       try {
         await axiosInstance.post("/attendance/punch-out", {
           punchOutTime: now.toISOString(),
           punchOutLocation: location,
-          emergencyReason: "", // Normal case
+          emergencyReason: "",
         });
 
         setOutTime(formatTime(now));
         setOutLocation(location);
         setHasPunchedOut(true);
-        stopElapsedTimer();
         toast.success('Punched out successfully!');
       } catch (error) {
         console.error('Punch out failed:', error);
@@ -169,7 +156,6 @@ export default function AttendancePage() {
       }
     });
   };
-
 
   const confirmEmergencyPunchOut = async () => {
     const trimmedReason = emergencyReason.trim();
@@ -191,7 +177,6 @@ export default function AttendancePage() {
       setOutTime(formatTime(time));
       setOutLocation(pendingPunchOutData.punchOutLocation);
       setHasPunchedOut(true);
-      stopElapsedTimer();
       toast.success('Emergency punch out recorded!');
     } catch (error) {
       console.error('Punch out failed:', error);
@@ -201,32 +186,6 @@ export default function AttendancePage() {
       setShowModal(false);
       setEmergencyReason('');
     }
-  };
-
-
-
-  const startElapsedTimer = (startDate) => {
-    const start = startDate ? startDate.getTime() : Date.now();
-    intervalRef.current = setInterval(() => {
-      const seconds = Math.floor((Date.now() - start) / 1000);
-      setElapsed(seconds);
-    }, 1000);
-  };
-
-
-  const stopElapsedTimer = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
-
-
-  const formatElapsed = (seconds) => {
-    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
-    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-    const secs = String(seconds % 60).padStart(2, '0');
-    return `${hrs}:${mins}:${secs}`;
   };
 
   return (
@@ -247,10 +206,6 @@ export default function AttendancePage() {
             </button>
             <div className="w-17 h-17 rounded-full overflow-hidden">
               <Image src="/profile.png" alt="avatar" width={70} height={70} />
-            </div>
-            <div className="bg-white text-black text-center border-4 border-[#3794bb] rounded-3xl text-xl font-bold px-12 py-2">
-              {hasPunchedIn ? formatElapsed(elapsed) : '00:00:00'}
-              <div className="text-lg font-normal text-center">Elapsed Time</div>
             </div>
           </div>
 
@@ -275,7 +230,7 @@ export default function AttendancePage() {
               <button
                 onClick={handlePunchIn}
                 disabled={hasPunchedIn || isPunchingIn}
-                className="flex items-center bg-[#058CBF] text-lg text-white px-6 py-2 rounded hover:bg-cyan-600 disabled:bg-gray-400 cursor-pointer"
+                className="flex items-center bg-[#058CBF] text-lg text-white px-6 py-2 rounded hover:bg-cyan-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
               >
                 <LuAlarmClock className="mr-2" />
                 {isPunchingIn ? 'Punching In...' : 'Punch In'}
@@ -285,13 +240,12 @@ export default function AttendancePage() {
               <button
                 onClick={handlePunchOut}
                 disabled={!hasPunchedIn || hasPunchedOut || isPunchingOut}
-                className="flex items-center bg-[#058CBF] text-lg text-white px-6 py-2 rounded hover:bg-cyan-600 disabled:bg-gray-400 cursor-pointer"
+                className="flex items-center bg-[#058CBF] text-lg text-white px-6 py-2 rounded hover:bg-cyan-600 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
               >
                 <LuAlarmClock className="mr-2" />
                 {isPunchingOut ? 'Punching Out...' : 'Punch Out'}
                 <TbDoorExit className="ml-2" />
               </button>
-
             </div>
 
             <div className="flex items-center gap-2 mb-2">
@@ -301,7 +255,7 @@ export default function AttendancePage() {
               </div>
               <button
                 onClick={() => router.push('/punchhistory')}
-                className="ml-auto bg-[#058CBF] text-white px-4 py-2 rounded hover:bg-[#69b0c9]"
+                className="ml-auto bg-[#058CBF] text-white px-4 py-2 rounded cursor-pointer hover:bg-[#69b0c9]"
               >
                 Punch History
               </button>
@@ -317,7 +271,6 @@ export default function AttendancePage() {
         </div>
       </div>
 
-      {/* Emergency Reason Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">

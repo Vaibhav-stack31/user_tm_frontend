@@ -1,22 +1,37 @@
- 
 "use client";
 import { useState, useEffect, useRef } from "react";
 import * as XLSX from "xlsx";
 import gsap from "gsap";
-
-const punchData = [
-  { date: "01/05/2025", InLocation: "Panvel", inTime: "09:36:15", OutLocation: "Panvel", outTime: "18:33:15", remark: "Present" },
-  { date: "02/05/2025", InLocation: "Panvel", inTime: "10:50:33", OutLocation: "Panvel", outTime: "20:25:00", remark: "Late" },
-  { date: "03/05/2025", InLocation: "Panvel", inTime: "08:44:30", OutLocation: "Panvel", outTime: "18:44:34", remark: "Present" },
-  { date: "05/05/2025", InLocation: "Panvel", inTime: "10:40:48", OutLocation: "Panvel", outTime: "19:58:16", remark: "Late" },
-  { date: "06/05/2025", InLocation: "Panvel", inTime: "-", OutLocation: "Panvel", outTime: "-", remark: "Absent" },
-  { date: "07/05/2025", InLocation: "Panvel", inTime: "09:56:48", OutLocation: "Panvel", outTime: "20:12:10", remark: "Present" },
-];
+import { axiosInstance } from "@/lib/axiosInstance";
+import toast from "react-hot-toast";
 
 export default function PunchHistory() {
   const [selectedDate, setSelectedDate] = useState("");
   const [remarkFilter, setRemarkFilter] = useState("");
   const underlineRef = useRef(null);
+  const [punchData, setPunchData] = useState([
+    {
+      date: "",
+      punchInLocation: "",
+      punchIn: "",
+      punchOutLocation: "",
+      punchOut: "",
+      remark: "Present"
+    }
+  ]);
+
+  useEffect(() => {
+    const fetchPunchData = async () => {
+      try {
+        const response = await axiosInstance("/attendance/punchHistory");
+        setPunchData(response?.data || []);
+      } catch (error) {
+        console.error("Failed to fetch punch data:", error);
+        toast.error("Failed to fetch punch data.", { duration: 2000 });
+      }
+    };
+    fetchPunchData();
+  }, []);
 
   useEffect(() => {
     gsap.fromTo(
@@ -26,10 +41,20 @@ export default function PunchHistory() {
     );
   }, []);
 
-  const filteredData = punchData.filter(item =>
+  const filteredData = punchData.filter((item) =>
     (selectedDate ? item.date === selectedDate : true) &&
     (remarkFilter ? item.remark === remarkFilter : true)
   );
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return isNaN(date) ? "" : date.toLocaleDateString("en-IN");
+  };
+
+  const formatTime = (dateStr) => {
+    const date = new Date(dateStr);
+    return isNaN(date) ? "" : date.toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit' });
+  };
 
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(filteredData);
@@ -106,19 +131,18 @@ export default function PunchHistory() {
               ) : (
                 filteredData.map((item, idx) => (
                   <tr key={idx} className="border-t border-gray-200">
-                    <td className="px-4 py-2 border border-gray-300">{item.date}</td>
-                    <td className="px-4 py-2 border border-gray-300">{item.InLocation}</td>
-                    <td className="px-4 py-2 border border-gray-300">{item.inTime}</td>
-                    <td className="px-4 py-2 border border-gray-300">{item.OutLocation}</td>
-                    <td className="px-4 py-2 border border-gray-300">{item.outTime}</td>
+                    <td className="px-4 py-2 border border-gray-300">{formatDate(item.date)}</td>
+                    <td className="px-4 py-2 border border-gray-300">{item.punchInLocation}</td>
+                    <td className="px-4 py-2 border border-gray-300">{formatTime(item.punchIn)}</td>
+                    <td className="px-4 py-2 border border-gray-300">{item.punchOutLocation}</td>
+                    <td className="px-4 py-2 border border-gray-300">{formatTime(item.punchOut)}</td>
                     <td
-                      className={`px-4 py-2 font-semibold border border-gray-300 ${
-                        item.remark === "Present"
-                          ? "text-green-600"
-                          : item.remark === "Late"
+                      className={`px-4 py-2 font-semibold border border-gray-300 ${item.remark === "Present"
+                        ? "text-green-600"
+                        : item.remark === "Late"
                           ? "text-orange-500"
                           : "text-red-600"
-                      }`}
+                        }`}
                     >
                       {item.remark}
                     </td>

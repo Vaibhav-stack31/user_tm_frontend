@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -11,18 +11,37 @@ import {
   FaSignOutAlt,
 } from 'react-icons/fa';
 import { useUser } from '../usersignup/usercontext';
+import { axiosInstance } from '@/lib/axiosInstance';
+import toast from 'react-hot-toast';
 
 export default function NavBar() {
-  const { userName } = useUser();
+  const [userData, setUserData] = useState([
+    {
+      firstName: "",
+      email: "",
+    }
+  ]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMeetingPopup, setShowMeetingPopup] = useState(false); // Added state for popup visibility
   const notifications = []; // Replace with actual notifications if needed
 
-  const handleProfileAction = (action) => {
-    alert(`Profile action: ${action}`);
+  const handleProfileAction = () => {
     setShowProfileMenu(false);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get('/profile/getProfile');
+        setUserData(response.data);
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        toast.error('Failed to fetch user data.');
+      }
+    }
+    fetchData();
+  }, [])
 
   const toggleMeetingPopup = () => {
     setShowMeetingPopup(!showMeetingPopup); // Toggle popup visibility
@@ -32,7 +51,7 @@ export default function NavBar() {
     <div className="bg-cyan-300 px-6 py-3 shadow flex items-center min-w-full relative">
       {/* Centered Welcome Message */}
       <h1 className="text-3xl font-bold text-black absolute left-10 transform whitespace-nowrap">
-        Welcome {userName || 'Ayaan Raje'}!
+        Welcome {userData.firstName || 'Guest'}!
       </h1>
 
       <div className="ml-auto flex items-center gap-12 mr-10">
@@ -206,8 +225,8 @@ export default function NavBar() {
                     />
                   </div>
                   <div>
-                    <div className="font-semibold">{userName || 'Guest'}</div>
-                    <div className="text-sm text-gray-500">user@example.com</div>
+                    <div className="font-semibold">{userData.firstName || 'Guest'}</div>
+                    <div className="text-sm text-gray-500">{userData.email}</div>
                   </div>
                 </div>
               </div>
