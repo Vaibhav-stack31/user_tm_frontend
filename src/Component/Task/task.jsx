@@ -55,19 +55,45 @@ export default function AddTask() {
         </span>
       </div>
 
-      <div className="mx-auto max-w-6xl bg-white border border-gray-300 rounded-xl shadow-[0px_2px_0px_rgba(0,0,0,0.2)] p-6">
+      <div className="mx-auto max-w-6xl bg-white border border-gray-400 rounded-xl shadow-[0px_2px_0px_rgba(0,0,0,0.2)] p-6">
         {/* Bucket Name */}
-        <div className="flex items-center mb-4 gap-4">
-          <label htmlFor="bucket-name" className="text-md font-medium text-gray-600 min-w-[100px]">
-            Bucket Name
-          </label>
-          <input
-            type="text"
-            id="bucket-name"
-            className="w-60 p-2 border border-gray-400 shadow-[0px_2px_0px_rgba(0,0,0,0.2)] rounded-sm"
-            placeholder="Team name"
-          />
-        </div>
+        <div className="flex items-center gap-4 mb-4">
+  <label
+    htmlFor="bucket-name"
+    className="text-md font-medium text-black min-w-[120px]"
+  >
+    Bucket Name
+  </label>
+
+  <div className="relative w-60">
+    <select
+      id="bucket-name"
+      className="w-full appearance-none px-4 py-2 text-gray-500 bg-white border border-gray-300 rounded shadow-[0px_2px_0px_rgba(0,0,0,0.2)] focus:outline-none"
+    >
+      <option value="" disabled selected hidden>
+        Team Name
+      </option>
+      <option value="IT - Code4bharat">IT - Code4bharat</option>
+      <option value="IT - Gkcc">IT - Gkcc</option>
+      <option value="IT - Isrc">IT - Isrc</option>
+      <option value="IT - Nexcore Alliance">IT - Nexcore Alliance</option>
+    </select>
+
+    {/* Custom arrow icon */}
+    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-600">
+      <svg
+        className="w-4 h-4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+</div>
+
 
         {/* Assignment Table */}
         <div className="grid grid-cols-3 gap-6 mx-auto mt-10 mb-10">

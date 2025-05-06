@@ -1,12 +1,33 @@
 "use client";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import {useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Signup() {
   const router = useRouter();
+  const texts = [
+    "Reduces time spent remembering or searching for Tasks",
+    "Improves task handling through simple, efficient tracking.",
+    "Simplifies tracking and managing tasks efficiently every day."
+  ];
+
+  const [index, setIndex] = useState(0);
+  const [animate, setAnimate] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimate(false); // reset animation
+      setTimeout(() => {
+        setIndex((prev) => (prev + 1) % texts.length);
+        setAnimate(true); // re-trigger animation
+      }, 100); // short delay to reset class
+    }, 3000); // every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -106,17 +127,22 @@ export default function Signup() {
     <div className="flex flex-row h-screen">
       {/* Left Side */}
       <div
-        className="w-2/5 h-full bg-cover bg-center relative flex items-center justify-center"
-        style={{ backgroundImage: "url('/signup/bgleft1.png')" }}
-      >
-        <div className="flex flex-col items-center gap-1">
-          <Image src="/signup/tasklogo.png" alt="Logo" width={300} height={150} />
-          <Image src="/signup/image1.png" alt="Image" width={300} height={150} className="-mt-20" />
-          <p className="text-black text-3xl mx-20 text-center mt-2">Reduces time spent remembering or searching for Tasks</p>
-
-
-        </div>
+      className="w-2/5 h-full bg-cover bg-center relative flex items-center justify-center"
+      style={{ backgroundImage: "url('/signup/bgleft.png')" }}
+    >
+      <div className="flex flex-col items-center gap-1">
+        <Image src="/signup/tasklogo.png" alt="Logo" width={300} height={150} />
+        <Image src="/signup/image1.png" alt="Image" width={300} height={150} className="-mt-20" />
+        <p
+          key={index} // ensures animation re-runs
+          className={`text-black text-2xl mx-30 text-center -mt-2 transition-all duration-700 ease-in-out ${
+            animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+          }`}
+        >
+          {texts[index]}
+        </p>
       </div>
+    </div>
 
       {/* Right Side */}
       <div
@@ -137,7 +163,7 @@ export default function Signup() {
         <h2 className="text-3xl font-bold text-black mb-6 mt-0">Create an Account</h2>
 
         <div className="bg-white p-8 rounded-2xl  shadow-[1px_1px_10px_lightgray] w-full max-w-2xl z-10">
-          <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
+          <form className="grid grid-cols-2 gap-4 " onSubmit={handleSubmit}>
             <InputField label="First Name" name="firstName" value={formData.firstName} handleChange={handleChange} />
             <InputField label="Last Name" name="lastName" value={formData.lastName} handleChange={handleChange} />
             <InputField label="E-mail" name="email" type="email" value={formData.email} handleChange={handleChange} />
@@ -188,7 +214,7 @@ export default function Signup() {
                 Already have an account?{' '}
                 <span
                   onClick={() => router.push('/')}
-                  className="text-blue-600 font-medium cursor-pointer hover:underline">
+                  className="text-[#3E9097] font-medium cursor-pointer hover:underline">
                   Login here
                 </span>
               </p>
@@ -203,7 +229,7 @@ export default function Signup() {
 function InputField({ label, name, type = 'text', value, handleChange, pattern }) {
   return (
     <div>
-      <label htmlFor={name} className="text-gray-900 mb-1 block">
+      <label htmlFor={name} className="text-gray-900 mb-1 px-1 block">
         {label}
       </label>
       <input
@@ -212,7 +238,7 @@ function InputField({ label, name, type = 'text', value, handleChange, pattern }
         id={name}
         pattern={pattern}
         placeholder={`Enter your ${label.toLowerCase()}`}
-        className="w-full p-3 rounded-xl shadow-[1px_1px_10px_lightgray] focus:border-blue-500 focus:outline-none bg-white text-black"
+        className="w-full p-3 rounded-xl px-3 shadow-[1px_1px_10px_lightgray] focus:border-blue-500 focus:outline-none bg-white text-black"
         required
         value={value}
         onChange={handleChange}
@@ -224,7 +250,7 @@ function InputField({ label, name, type = 'text', value, handleChange, pattern }
 function PasswordField({ label, name, value, handleChange, show, toggle, error }) {
   return (
     <div className="relative">
-      <label htmlFor={name} className="text-gray-900 mb-1 block">
+      <label htmlFor={name} className="text-gray-900 mb-1 px-1 block">
         {label}
       </label>
       <input

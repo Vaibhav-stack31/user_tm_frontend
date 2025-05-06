@@ -48,7 +48,7 @@ export default function NavBar() {
   };
 
   return (
-    <div className="bg-cyan-300 px-6 py-3 shadow flex items-center min-w-full relative">
+    <div className="bg-gradient-to-r  from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] px-6 py-3  flex items-center min-w-full relative">
       {/* Centered Welcome Message */}
       <h1 className="text-3xl font-bold text-black absolute left-10 transform whitespace-nowrap">
         Welcome {userData.firstName || 'Guest'}!
