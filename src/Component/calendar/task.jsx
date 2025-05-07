@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import { LuCalendarDays, LuClock } from 'react-icons/lu';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function TaskForm() {
+export default function TaskPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [title, setTitle] = useState('');

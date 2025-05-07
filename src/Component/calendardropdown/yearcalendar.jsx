@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import Link from "next/link";  // Make sure to import Link
 
 const months = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -18,10 +19,12 @@ function getFirstDay(year, month) {
 }
 
 const Yearcalendar = () => {
+  const [showDropdown, setShowDropdown] = useState(false); // State for managing dropdown visibility
   const year = 2025;
   const today = new Date();
 
   const underlineRef = useRef(null);
+  const dropdownRef = useRef(null); // Ref for dropdown menu
 
   useEffect(() => {
     gsap.fromTo(
@@ -29,19 +32,56 @@ const Yearcalendar = () => {
       { width: "0%" },
       { width: "100%", duration: 1, ease: "power2.out" }
     );
+
+    // Close dropdown when clicked outside
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <div className="p-4 text-black max-w-screen-xl mx-auto">
-      <h2 className="text-center font-semibold text-gray-800 text-2xl mb-6">
-        <span className="relative inline-block">
-          MyCalendar2025
-          <span
-            ref={underlineRef}
-            className="absolute left-0 bottom-0 h-[2px] bg-red-500 w-full"
-          ></span>
-        </span>
-      </h2>
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+       <h2 className="text-left font-bold text-gray-800 text-3xl mb-15 ml-15">
+
+  <span className="relative inline-block">
+    MyCalendar2025
+    <span
+      ref={underlineRef}
+      className="absolute left-0 bottom-[-2px] h-[3px] bg-red-500 w-[50%]"
+    ></span>
+  </span>
+</h2>
+        <div className="relative mt-4 md:mt-0" ref={dropdownRef}>
+        <button
+  onClick={() => setShowDropdown(prev => !prev)}
+  className="px-5 py-2 rounded-lg border border-[#877575] bg-white text-black font-medium transition duration-200 ease-in-out hover:bg-gray-100 hover:shadow -ml-1"
+>
+  Year
+</button>
+
+
+          {showDropdown && (
+            <div className="absolute top-full mt-2 right-0 bg-white rounded-lg shadow z-10 w-40">
+              {[
+                { label: "Day", href: "/daycalendar" },
+                { label: "Month", href: "/calendar" },
+                { label: "Year", href: "/yearcalendar" },
+              ].map((item) => (
+                <Link key={item.label} href={item.href}>
+                  <div className="px-4 py-2 hover:bg-gray-100 rounded-lg cursor-pointer text-sm text-gray-700">
+                    {item.label}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-xs mx-auto w-[1100px]">
         {months.map((month, monthIndex) => {

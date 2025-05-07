@@ -1,13 +1,10 @@
-//import Calendar from '@/components/calendardropdwon/calendar';
+
 import Calendar from '@/Component/calendardropdown/calendar';
 import Categories from '@/Component/calendardropdown/categerious';
 import ToDo from '@/Component/calendardropdown/todo';
 import NavBar from '@/Component/Navbar/navbar';
 import Sidebar from '@/Component/Usersidebar/usersidebar';
-// Categories from '@/components/calendardropdwon/categerious';
-//import ToDo from '@/components/calendardropdwon/todo';
-//import Navbar from '@/components/layout/navbar';
-//import Sidebar from '@/components/layout/sidebar';
+
 import React from 'react';
 
 export default function Home() {
