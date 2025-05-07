@@ -184,7 +184,7 @@ export default function SalarySlipPage() {
             <div className="text-right mb-4">
                 <button 
                     onClick={handleDownloadPdf}
-                    className="bg-[#058CBF] hover:bg-orange-600 text-white font-bold py-2 px-4 rounded"
+                    className="bg-[#058CBF] hover:bg-orange-600 text-white font-bold cursor-pointer py-2 px-4 rounded"
                 >
                     Download PDF
                 </button>
@@ -209,12 +209,12 @@ export default function SalarySlipPage() {
                     </div>
                 </div>
 
-                <div className="flex justify-center items-center border-b pb-4">
+                <div className="flex justify-center items-center pb-4">
                     <p>PaySlip for the Month of September 2025</p>
                 </div>
 
         {/* Table Head */}
-<div className="grid grid-cols-4 bg-[#018ABE] text-white font-semibold  py-2 border border-gray-300">
+<div className="grid grid-cols-4 bg-[#018ABE] text-white text-center font-semibold  py-2 border border-gray-300">
   <div className="px-2">EARNINGS</div>
   <div className="px-2">AMOUNT</div>
   <div className="px-2">DEDUCTIONS</div>
@@ -263,14 +263,14 @@ export default function SalarySlipPage() {
 </div>
 
 
-                <div className="grid grid-cols-4 bg-orange-100 font-semibold text-center mt-6 mb-2">
+                <div className="grid grid-cols-4 py-2 bg-[#018ABE] text-white font-semibold text-center mt-6 mb-2">
                     <div>REIMBURSEMENTS</div>
                     <div>AMOUNT</div>
                     <div></div>
                     <div></div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-x-6 gap-y-1 text-sm">
+                <div className="grid grid-cols-4 text-center gap-x-6 gap-y-1 text-sm">
                     <div className="space-y-1">
                         <p>Mobile Bill</p>
                         <p>Travel</p>
@@ -285,8 +285,8 @@ export default function SalarySlipPage() {
                     </div>
                 </div>
 
-                <div className="bg-orange-100 mt-6 p-4 rounded-lg text-center">
-                    <p className="text-xl font-bold text-orange-700">TOTAL NET PAYABLE: ₹50,313.95</p>
+                <div className="bg-[#018ABE] text-white mt-6 p-4 rounded-lg text-center">
+                    <p className="text-xl font-bold ">TOTAL NET PAYABLE: ₹50,313.95</p>
                     <p className="text-sm italic">(Fifty Thousand Three Hundred and Thirteen Rupees & 95/100)</p>
                 </div>
             </div>

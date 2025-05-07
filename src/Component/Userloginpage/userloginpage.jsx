@@ -1,13 +1,33 @@
 'use client';
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 
+
 export default function Userloginpage() {
+  const texts = [
+    "Quick access to your dashboard with a single login.",
+    "Secure login to manage tasks seamlessly in one place.",
+    "Stay connected to your productivity, anytime, anywhere."
+  ];
+  const [index, setIndex] = useState(0);
+    const [animate, setAnimate] = useState(true);
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setAnimate(false); // reset animation
+        setTimeout(() => {
+          setIndex((prev) => (prev + 1) % texts.length);
+          setAnimate(true); // re-trigger animation
+        }, 100); // short delay to reset class
+      }, 3000); // every 3 seconds
+  
+      return () => clearInterval(interval);
+    }, []);
   const router = useRouter();
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -98,10 +118,14 @@ export default function Userloginpage() {
           <Image src="/logo.png" alt="Task Manager Icon" width={160} height={160} className="mb-4" />
           <h1 className="text-4xl font-bold text-black mb-4">Welcome Back!</h1>
           <Image src="/logimage.png" alt="Illustration" width={400} height={320} className="mb-5" />
-          <p className="text-2xl text-black text-center px-4 rounded">
-            A simple and intuitive task manager to organize,<br />
-            track, and prioritize your tasks.
-          </p>
+          <p
+          key={index} // ensures animation re-runs
+          className={`text-black text-2xl mx-30 text-center  transition-all duration-700 ease-in-out ${
+            animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+          }`}
+        >
+          {texts[index]}
+        </p>
         </div>
 
         {/* Right Panel */}
@@ -176,7 +200,7 @@ export default function Userloginpage() {
     type={showPassword ? 'text' : 'password'}
     value={password}
     onChange={(e) => setPassword(e.target.value)}
-    placeholder="Enter 8-10 character secure password"
+    placeholder="Enter above 8 character secure password"
     required
     minLength={8}
     className="w-full px-4 py-3 pr-10 rounded-xl bg-white text-black shadow-[1px_4px_10px_lightgray] focus:outline-none"

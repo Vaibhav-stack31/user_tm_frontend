@@ -7,6 +7,7 @@ import { FaRegBell, FaVideo, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useUser } from '../usersignup/usercontext';
 import { axiosInstance } from '@/lib/axiosInstance';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 export default function NavBar() {
   const [userData, setUserData] = useState({ firstName: "", email: "" });
@@ -38,6 +39,8 @@ export default function NavBar() {
     fetchData();
   }, []);
 
+
+  const router = useRouter();
   return (
     <div className="bg-gradient-to-r from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] px-6 py-3 flex items-center min-w-full relative">
       <h1 className="text-3xl font-bold text-white absolute left-10 whitespace-nowrap">
@@ -172,7 +175,12 @@ export default function NavBar() {
           />
           {showNotifications && (
             <div className="absolute right-0 top-10 w-80 bg-white rounded-lg shadow-lg z-20">
-              <div className="p-4 font-semibold border-b">Notifications</div>
+              <div 
+      className="p-4 font-semibold border-b cursor-pointer"
+      onClick={() => router.push('/notification')}
+    >
+      Notifications
+    </div>
               <div className="p-4 text-gray-600 text-sm max-h-60 overflow-y-auto">
                 {notifications.length === 0 ? (
                   <div>No new notifications</div>

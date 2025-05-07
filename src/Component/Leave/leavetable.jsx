@@ -134,7 +134,7 @@ export default function LeaveTable() {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen relative">
+    <div className="p-6 bg-white min-h-screen relative">
       <Toaster />
       <h1 className="text-2xl font-bold mb-2">My Leave</h1>
       <div className="w-24 h-1 bg-red-500 mb-6"></div>

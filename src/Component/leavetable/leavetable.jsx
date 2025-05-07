@@ -1,6 +1,8 @@
 'use client';
+import { useGSAP } from "@gsap/react";
 import { useEffect, useState, useRef } from "react";
 import { Toaster, toast } from 'react-hot-toast';
+import gsap from "gsap";
 
 export default function LeaveTable() {
   const [leaves, setLeaves] = useState([]);
@@ -103,15 +105,29 @@ export default function LeaveTable() {
     setWordCount(words.filter(word => word).length);
   };
 
+    const underlineRef = useRef(null);
+  useGSAP(() => {
+    gsap.fromTo(
+      underlineRef.current,
+      { width: "0%" },
+      { width: "100%", duration: 1, ease: "power2.out" }
+    );
+  }, []);
   return (
-    <div className="p-6 bg-gray-50 min-h-screen relative">
+    <div className="p-6 bg-white min-h-screen relative">
       <Toaster />
-      <h1 className="text-2xl font-bold mb-2">My Leave</h1>
-      <div className="w-24 h-1 bg-red-500 mb-6"></div>
+      <h1 className="text-2xl font-bold mb-2 relative inline-block text-gray-800">
+                <span
+                    ref={underlineRef}
+                    className="absolute left-0 bottom-0 h-[2px] bg-yellow-500 w-full"
+                ></span>
+              My Leave
+            </h1>
+      <div className="w-190 h-1 bg-white mb-6"></div>
 
       <button
         onClick={() => setShowModal(true)}
-        className="mb-6 px-5 py-2 bg-[#018ABE] text-white rounded-full hover:bg-[#017ba9] transition"
+        className="mb-6 px-5 py-2 bg-[#018ABE] cursor-pointer text-white rounded-full hover:bg-[#017ba9] transition"
       >
         Leave Application
       </button>
@@ -250,34 +266,36 @@ export default function LeaveTable() {
 
       {/* LEAVE TABLE */}
       <div className="rounded-lg shadow-lg overflow-hidden">
-        <table className="min-w-full border-separate border-spacing-0">
-          <thead style={{ backgroundColor: '#018ABE' }} className="text-white">
-            <tr className="text-left">
-              <th className="p-3 border-r border-white rounded-tl-lg">Sr No.</th>
-              <th className="p-3 border-r border-white">Request to</th>
-              <th className="p-3 border-r border-white">Reason for Leave</th>
-              <th className="p-3 border-r border-white  whitespace-nowrap">Apply Date</th>
-              <th className="p-3 border-r border-white whitespace-nowrap">From Date</th>
-              <th className="p-3 border-r border-white whitespace-nowrap">To Date</th>
-              <th className="p-3 border-r border-white whitespace-nowrap">Total Days</th>
-              <th className="p-3 border-r border-white whitespace-nowrap">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leaves.map((leave, index) => (
-              <tr key={index}>
-                <td className="py-1"><p className="border-r p-4 whitespace-nowrap">{index + 1}</p></td>
-                <td className="py-1 "><p className="border-r p-4 whitespace-nowrap ">{leave.approvalTo}</p></td>
-                <td className="py-1"><p className="border-r p-4">{leave.reason}</p></td>
-                <td className="py-1"><p className="border-r p-4 whitespace-nowrap ">{leave.applyDate}</p></td>
-                <td className="py-1"><p className="border-r p-4 whitespace-nowrap">{leave.fromDate}</p></td>
-                <td className="py-1"><p className="border-r p-4 whitespace-nowrap">{leave.toDate}</p></td>
-                <td className="py-1"><p className="border-r p-4 whitespace-nowrap">{leave.totalDays}</p></td>
-                <td className="py-1"><p className=" p-4 whitespace-nowrap">{leave.status}</p></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <table className="table-fixed w-full border-collapse">
+  <thead className="bg-[#018ABE] text-white">
+    <tr>
+      <th className="w-[5%] py-2 px-2">Sr No.</th>
+      <th className="w-[10%] py-2 px-2">Request to</th>
+      <th className="w-[30%] py-2 px-2">Reason for Leave</th>
+      <th className="w-[10%] py-2 px-2">Apply Date</th>
+      <th className="w-[10%] py-2 px-2">From Date</th>
+      <th className="w-[10%] py-2 px-2">To Date</th>
+      <th className="w-[10%] py-2 px-2">Total Days</th>
+      <th className="w-[10%] py-2 px-2">Status</th>
+    </tr>
+  </thead>
+  <tbody className="text-sm">
+    {leaves.map((leave, index) => (
+      <tr key={index} className="">
+        <td className="relative py-2 text-center px-2">{index + 1}</td>
+        <td className="relative py-2  text-center px-2 break-words"><span className="custom-border-left"></span>{leave.approvalTo}</td>
+        <td className="relative py-2 px-2 break-words"><span className="custom-border-left"></span>{leave.reason}</td>
+        <td className="relative py-2  text-center px-2"><span className="custom-border-left"></span>{leave.applyDate}</td>
+        <td className="relative py-2 text-center px-2"><span className="custom-border-left"></span>{leave.fromDate}</td>
+        <td className="relative py-2  text-center  px-2"><span className="custom-border-left"></span>{leave.toDate}</td>
+        <td className="relative py-2  text-center px-2"><span className="custom-border-left"></span>{leave.totalDays}</td>
+        <td className="relative py-2  text-center px-2"><span className="custom-border-left"></span>{leave.status}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+
       </div>
     </div>
   );
