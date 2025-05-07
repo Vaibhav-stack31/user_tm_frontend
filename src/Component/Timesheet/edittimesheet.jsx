@@ -22,6 +22,12 @@ export default function EditTimeSheet() {
     const underlineRef = useRef(null);
     const rowRefs = useRef([]);
 
+    useEffect(() => {
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        setDate(formattedDate);
+    }, []);
+
     // Fetch timesheet data when date changes
     useEffect(() => {
         if (date) {
