@@ -1,30 +1,31 @@
 
+import PunchHistory from '@/Component/attendance/punchhistory';
+import LeaveTable from '@/Component/leavetable/leavetable';
+import NavBar from '@/Component/navbar/navbar'
 
-import LeaveTable from "@/Component/leavetable/leavetable";
-import NavBar from "@/Component/Navbar/navbar";
-import Sidebar from "@/Component/Usersidebar/usersidebar";
-import React from "react";
 
-function page() {
+
+
+import Sidebar from '@/Component/usersidebar/usersidebar'
+import React from 'react'
+
+export default function Home() {
   return (
-    <div className="min-h-screen md:flex bg-white">
-
-      {/* Desktop Sidebar Section (visible on md+) */}
-      <div className="md:w-1/6 ">
+    <div className="h-screen overflow-hidden"> {/* Prevent page scroll */}
+      {/* Sidebar - Fixed */}
+      <div className="w-1/6 fixed top-0 bottom-0 left-0 bg-gray-100">
         <Sidebar />
       </div>
 
-      {/* Main Content */}
-      <div className="w-full md:w-5/6 md:flex-1 h-screen bg-white">
-        {/* Desktop Navbar (hidden on mobile) */}
+      {/* Navbar - Fixed */}
+      <div className="fixed top-0 right-0 w-5/6 ml-[16.6667%] z-10">
         <NavBar />
-<div>
-
-</div>
       </div>
-<LeaveTable/>
+
+      {/* Scrollable Content below Navbar */}
+      <div className="mt-[60px] ml-[16.6667%] h-[calc(100vh-60px)] overflow-y-auto p-4 bg-white">
+     <LeaveTable/>
+      </div>
     </div>
   );
 }
-
-export default page;
