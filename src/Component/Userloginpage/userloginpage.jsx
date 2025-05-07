@@ -81,9 +81,7 @@ export default function Userloginpage() {
       }
 
       toast.success('Login successful!');
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 1500);
+      router.push('/dashboard');
     } catch (err) {
       console.error(err);
       toast.error('Something went wrong. Please try again.');
