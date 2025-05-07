@@ -16,7 +16,7 @@ export default function Timeline() {
         return today.toISOString().split("T")[0];
     });
     const [projectName, setProjectName] = useState("");
-    const [selectedManagers, setSelectedManagers] = useState([]);
+    const [selectedManagers, setSelectedManagers] = useState(["Awab Fakih", "Ayaan Raje", "Prashant Patil"]);
     const [showDropdown, setShowDropdown] = useState(false);
     const [todayHours, setTodayHours] = useState([]);
     const [totalTime, setTotalTime] = useState("00:00");
@@ -78,9 +78,9 @@ export default function Timeline() {
             return {
                 timeRange: `${formatTime(start)} - ${formatTime(end)}`,
                 task: "",
-                type: "Miscellaneous",
+                type: "work",
                 duration: "01:00",
-                bucket: "Miscellaneous",
+                bucket: "work",
             };
         });
 
@@ -325,7 +325,7 @@ export default function Timeline() {
     };
 
     const handleEditTimesheet = () => router.push("/edittimesheet");
-    const handleAddTask = () => router.push("/add-task");
+    const handleAddTask = () => router.push("/task");
 
     const totalMinutes = parseInt(totalTime.split(":")[0]) * 60 + parseInt(totalTime.split(":")[1]);
     const isLessThanEightHours = totalMinutes < 480;
@@ -374,7 +374,7 @@ export default function Timeline() {
                     </button>
                     {showDropdown && !isFilledTimesheet && (
                         <div className="absolute top-full mt-1 bg-white border border-gray-200 rounded-md w-full z-10">
-                            {["Awab Fakih"].map((managerName) => (
+                            {["Awab Fakih", "Ayaan Raje", "Prashant Patil"].map((managerName) => (
                                 <label key={managerName} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                     <input
                                         className="w-5 h-5 text-blue-600"
@@ -398,14 +398,14 @@ export default function Timeline() {
                 <div className="flex gap-4">
                     <button
                         onClick={() => addTimelineItem("Meeting")}
-                        className={`px-4 py-2 rounded-lg ${isFilledTimesheet ? 'bg-gray-400 cursor-not-allowed' : 'bg-black text-white'}`}
+                        className={`px-4 py-2 rounded-lg ${isFilledTimesheet ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#018ABE] text-white'}`}
                         disabled={isFilledTimesheet}
                     >
                         Add Meeting
                     </button>
                     <button
                         onClick={() => addTimelineItem("Miscellaneous")}
-                        className={`px-4 py-2 rounded-lg ${isFilledTimesheet ? 'bg-gray-400 cursor-not-allowed' : 'bg-black text-white'}`}
+                        className={`px-4 py-2 rounded-lg ${isFilledTimesheet ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#018ABE] text-white'}`}
                         disabled={isFilledTimesheet}
                     >
                         Add Miscellaneous
@@ -428,83 +428,96 @@ export default function Timeline() {
             </div>
 
             <div className="rounded-md overflow-x-auto mb-4 border-t-2 border-[#018ABE]">
-                <table className="w-full table-auto border-collapse rounded-lg">
-                    <thead>
-                        <tr className="bg-[#018ABE] text-white text-left">
-                            <th className="px-4 py-2 w-[12%]">Bucket</th>
-                            <th className="px-4 py-2 border-l border-r w-[40%] border-white">Task</th>
-                            <th className="px-4 py-2 border-l border-r w-[20%] border-white">Time</th>
-                            <th className="px-4 py-2 border-l border-r w-[10%] border-white">Duration</th>
-                            <th className="px-4 py-2 border-l border-r border-white w-[5%]">Action</th>
-                        </tr>
-                    </thead>
+  <table className="w-full table-auto border-separate border-spacing-0">
+    <thead>
+      <tr className="bg-[#018ABE] text-white text-center">
+        <th className="px-4 py-3 w-[14%] whitespace-nowrap rounded-tl-md">Bucket</th>
+        <th className="px-4 py-3 border-l border-white w-[40%] whitespace-nowrap">Task</th>
+        <th className="px-4 py-3 border-l border-white w-[20%] whitespace-nowrap">Time</th>
+        <th className="px-4 py-3 border-l border-white w-[10%] whitespace-nowrap">Duration</th>
+        <th className="px-4 py-3 border-l border-white w-[5%] whitespace-nowrap rounded-tr-md">Action</th>
+      </tr>
+    </thead>
+  
+
                     <tbody>
                         {items.map((item, index) => (
-                            <tr
-                                key={index}
-                                ref={(el) => (rowRefs.current[index] = el)}
-                                className="hover:bg-gray-100"
-                            >
-                                <td className="px-4 py-2 border-4 border-white">
-                                    <textarea
-                                        className={`w-full h-10 pl-4 border border-gray-500 rounded p-1 resize-none overflow-hidden ${isFilledTimesheet ? 'bg-gray-100' : ''}`}
-                                        readOnly
-                                        value={item.bucket}
-                                    />
-                                </td>
-                                <td className="px-4 py-2 border-4 border-white">
-                                    <textarea
-                                        className={`w-full h-10 pl-4 border border-gray-500 rounded p-1 resize-none overflow-hidden ${isFilledTimesheet ? 'bg-gray-100' : ''}`}
-                                        value={item.task}
-                                        onChange={(e) => updateItem(index, "task", e.target.value)}
-                                        onKeyDown={(e) => handleKeyDown(e, 'task', index)}
-                                        ref={(el) => {
-                                            if (inputRefs.current.items[index]) {
-                                                inputRefs.current.items[index].task = el;
-                                            }
-                                        }}
-                                        readOnly={isFilledTimesheet}
-                                    />
-                                </td>
-                                <td className="px-4 py-2 border-4 border-white">
-                                    <textarea
-                                        className={`w-full h-10 pl-4 border border-gray-500 rounded p-1 resize-none overflow-hidden ${isFilledTimesheet ? 'bg-gray-100' : ''}`}
-                                        readOnly
-                                        value={item.timeRange}
-                                    />
-                                </td>
-                                <td className="px-4 py-2 border-4 border-white">
-                                    <input
-                                        type="text"
-                                        value={item.duration}
-                                        onChange={(e) => handleDurationChange(index, e.target.value)}
-                                        onKeyDown={(e) => handleKeyDown(e, 'duration', index)}
-                                        ref={(el) => {
-                                            if (inputRefs.current.items[index]) {
-                                                inputRefs.current.items[index].duration = el;
-                                            }
-                                        }}
-                                        className={`border border-black rounded px-2 py-1 w-20 text-center ${isFilledTimesheet ? 'bg-gray-100' : ''}`}
-                                        readOnly={isFilledTimesheet}
-                                    />
-                                </td>
-                                <td className="px-4 py-2 text-black text-center">
-                                    <button
-                                        onClick={() => deleteItem(index)}
-                                        aria-label="Delete item"
-                                        className={isFilledTimesheet ? 'opacity-30 cursor-not-allowed' : ''}
-                                        disabled={isFilledTimesheet}
-                                    >
-                                        <AiFillDelete className="text-lg hover:text-red-700" />
-                                    </button>
-                                </td>
-                            </tr>
+                           <tr key={index} ref={(el) => (rowRefs.current[index] = el)} className="hover:bg-gray-100">
+                           <td className="relative px-4 py-2 border-4 border-white">
+                            
+                             <textarea
+                               className={`w-full h-10 border text-center border-gray-500 rounded p-1 resize-none overflow-hidden ${isFilledTimesheet ? 'bg-gray-100' : ''}`}
+                               readOnly
+                               value={item.bucket}
+                             />
+                           </td>
+                         
+                           <td className="relative px-4 py-2 border-4 border-white">
+                             <span className="custom-border-left"></span>
+                             <textarea
+                               className={`w-full h-10 border border-gray-500 rounded p-1 resize-none overflow-hidden ${isFilledTimesheet ? 'bg-gray-100' : ''}`}
+                               value={item.task}
+                               onChange={(e) => updateItem(index, "task", e.target.value)}
+                               onKeyDown={(e) => handleKeyDown(e, 'task', index)}
+                               ref={(el) => {
+                                 if (inputRefs.current.items[index]) {
+                                   inputRefs.current.items[index].task = el;
+                                 }
+                               }}
+                               readOnly={isFilledTimesheet}
+                             />
+                           </td>
+                         
+                           <td className="relative px-4 py-2 border-4 border-white">
+                             <span className="custom-border-left"></span>
+                             <textarea
+                               className={`w-full h-10 text-center border border-gray-500 rounded p-1 resize-none overflow-hidden ${isFilledTimesheet ? 'bg-gray-100' : ''}`}
+                               readOnly
+                               value={item.timeRange}
+                             />
+                           </td>
+                         
+                           <td className="relative px-4 py-2 border-4 border-white">
+                             <span className="custom-border-left"></span>
+                             <input
+                               type="text"
+                               value={item.duration}
+                               onChange={(e) => handleDurationChange(index, e.target.value)}
+                               onKeyDown={(e) => handleKeyDown(e, 'duration', index)}
+                               ref={(el) => {
+                                 if (inputRefs.current.items[index]) {
+                                   inputRefs.current.items[index].duration = el;
+                                 }
+                               }}
+                               className={`border border-black rounded px-2 py-1 w-20 text-center ${isFilledTimesheet ? 'bg-gray-100' : ''}`}
+                               readOnly={isFilledTimesheet}
+                             />
+                           </td>
+                         
+                           <td className="relative px-4 py-2 border-4 border-white text-black text-center">
+                             <span className="custom-border-left"></span>
+                             <button
+                               onClick={() => deleteItem(index)}
+                               aria-label="Delete item"
+                               className={isFilledTimesheet ? 'opacity-30 cursor-not-allowed' : ''}
+                               disabled={isFilledTimesheet}
+                             >
+                               <AiFillDelete className="text-lg hover:text-red-700" />
+                             </button>
+                           </td>
+                         </tr>
+                         
+                          
                         ))}
                         <tr className="bg-gray-100 font-semibold">
-                            <td className="px-4 py-2 text-center" colSpan={3}>
-                                Total Hours
-                            </td>
-                            <td className="px-4 py-2 text-center border-2 border-white">
+
+
+                        <td className="text-right relative right-0 px-16 py-2" colSpan={3}>
+  Total Hours
+</td>
+
+<td className="px-4 py-2 text-center border-l-2 border-r-2 border-white">
+
                                 <span className={`px-2 py-1 rounded ${isLessThanEightHours ? "bg-[#fc6a5d] text-black" : "bg-[#61c973] text-black"}`}>
                                     {totalTime}
                                 </span>
