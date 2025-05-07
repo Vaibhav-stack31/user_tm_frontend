@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaRegBell, FaVideo, FaUser, FaSignOutAlt } from "react-icons/fa";
-import { useUser } from '../usersignup/usercontext';
 import { axiosInstance } from '@/lib/axiosInstance';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 export default function NavBar() {
   const [userData, setUserData] = useState({ firstName: "", email: "" });
@@ -25,6 +25,17 @@ export default function NavBar() {
     setShowProfileMenu(false);
   };
 
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.post('/logout');
+      toast.success("Logged out successfully!");
+      router.push('/');
+    } catch (error) {
+      console.log("Failed to log out:", error);
+      toast.error('Failed to log out.');
+    }
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,6 +49,8 @@ export default function NavBar() {
     fetchData();
   }, []);
 
+
+  const router = useRouter();
   return (
     <div className="bg-gradient-to-r from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] px-6 py-3 flex items-center min-w-full relative">
       <h1 className="text-3xl font-bold text-white absolute left-10 whitespace-nowrap">
@@ -50,8 +63,15 @@ export default function NavBar() {
         </button>
 
         {showMeetingPopup && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800/50 backdrop-blur-[1px]">
-            <div className="bg-white p-8 rounded-lg shadow-md text-center w-full max-w-xl relative">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800/50 backdrop-blur-[1px]"
+            onClick={() => setShowMeetingPopup(false)} // ⬅ closes popup on outside click
+          >
+            <div
+              className="bg-white p-8 rounded-lg shadow-md text-center w-full max-w-xl relative"
+              onClick={(e) => e.stopPropagation()} // ⬅ prevents inner click from closing
+            >
+
               <h2 className="text-2xl font-bold mb-6 border-b-2 border-black inline-block">
                 SCHEDULE MEETING
               </h2>
@@ -116,50 +136,44 @@ export default function NavBar() {
                   <option value="90">1.5 hours</option>
                 </select>
                 <div className="flex items-center gap-2">
-  <label className="text-gray-800">Link</label>
-  <input
-    id="meetingLink"
-    type="url"
-    required
-    className="flex-1 p-2 border border-black rounded"
-  />
-</div>
-<div className="mt-2 flex justify-end">
-  <button
-    type="button"
-    onClick={() => {
-      const input = document.getElementById('meetingLink');
-      if (input && input.value) {
-        navigator.clipboard.writeText(input.value);
-      }
-    }}
-    className="text-sm text-blue-600 underline"
-  >
-    Copy Link
-  </button>
-</div>
-
-
- 
-
-{/* Spacer for layout if needed */}
-<div className="h-16"></div>
-
-{/* Absolute Create button - outside flow */}
-<div className="relative">
-  <button
-    onClick={toggleMeetingPopup}
-    className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#018ABE] rounded-xl text-2xl text-white px-8 py-2"
-  >
-    Create
-  </button>
+                  <label className="text-gray-800">Link</label>
+                  <input
+                    id="meetingLink"
+                    type="url"
+                    required
+                    className="flex-1 p-2 border border-black rounded"
+                  />
+                </div>
+                <div className="mt-2 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const input = document.getElementById('meetingLink');
+                      if (input && input.value) {
+                        navigator.clipboard.writeText(input.value);
+                      }
+                    }}
+                    className="text-sm text-blue-600 underline"
+                  >
+                    Copy Link
+                  </button>
+                </div>
 
 
 
-               
-              
 
-</div></form>
+                {/* Spacer for layout if needed */}
+                <div className="h-16"></div>
+
+                {/* Absolute Create button - outside flow */}
+                <div className="relative">
+                  <button
+                    onClick={toggleMeetingPopup}
+                    className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#018ABE] rounded-xl text-2xl text-white px-8 py-2"
+                  >
+                    Create
+                  </button>
+                </div></form>
             </div>
           </div>
         )}
@@ -172,7 +186,12 @@ export default function NavBar() {
           />
           {showNotifications && (
             <div className="absolute right-0 top-10 w-80 bg-white rounded-lg shadow-lg z-20">
-              <div className="p-4 font-semibold border-b">Notifications</div>
+              <div
+                className="p-4 font-semibold border-b cursor-pointer"
+                onClick={() => router.push('/notification')}
+              >
+                Notifications
+              </div>
               <div className="p-4 text-gray-600 text-sm max-h-60 overflow-y-auto">
                 {notifications.length === 0 ? (
                   <div>No new notifications</div>
@@ -241,7 +260,7 @@ export default function NavBar() {
 
                 <Link href="/">
                   <div
-                    onClick={() => handleProfileAction()}
+                    onClick={() => handleLogout()}
                     className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100 text-red-500 cursor-pointer"
                   >
                     <FaSignOutAlt />

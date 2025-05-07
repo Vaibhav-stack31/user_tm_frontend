@@ -26,6 +26,8 @@ const Yearcalendar = () => {
   const underlineRef = useRef(null);
   const dropdownRef = useRef(null); // Ref for dropdown menu
 
+  const [selectedDate, setSelectedDate] = useState(null); // Add the useState hook for selectedDate
+
   useEffect(() => {
     gsap.fromTo(
       underlineRef.current,
@@ -81,6 +83,17 @@ const Yearcalendar = () => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* DatePicker component */}
+      <div className="mb-4 text-center">
+        <h3 className="text-lg mb-2">Select a Date</h3>
+        <DatePicker
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)} // Update selected date
+          inline
+          calendarStartDay={0}
+        />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-xs mx-auto w-[1100px]">

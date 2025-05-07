@@ -38,7 +38,7 @@ export default function AddTask() {
       setDeadline("");
     }
   };
-
+  const [priority, setPriority] = useState("low");
   return (
     <div className="h-auto p-8">
       {/* Heading */}
@@ -149,14 +149,16 @@ export default function AddTask() {
               Priority
             </label>
             <select
-              id="priority"
-              className="border border-gray-400 rounded-md px-3 w-60 py-2 text-md shadow-[0px_2px_0px_rgba(0,0,0,0.2)]"
-            >
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
-              <option>Urgent</option>
-            </select>
+  value={priority}
+  onChange={(e) => setPriority(e.target.value)}
+  className="border border-gray-400 w-60 rounded-md px-3 py-2 text-md shadow-[0px_2px_0px_rgba(0,0,0,0.2)]"
+>
+  <option value="low">Low</option>
+  <option value="medium">Medium</option>
+  <option value="high">High</option>
+  <option value="urgent">Urgent</option> {/* corrected spelling */}
+</select>
+
           </div>
 
           <div className="flex flex-col">

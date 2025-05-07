@@ -1,10 +1,20 @@
-'use client';
-import React, { useRef } from 'react';
+   "use client";
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 import jsPDF from 'jspdf';
+import { useGSAP } from "@gsap/react";
 
 export default function SalarySlipPage() {
     const pdfRef = useRef();
-
+    const underlineRef = useRef(null);
+    useGSAP(() => {
+        gsap.fromTo(
+          underlineRef.current,
+          { width: "0%" },
+          { width: "100%", duration: 1, ease: "power2.out" }
+        );
+      }, []);
     const handleDownloadPdf = () => {
         try {
             // Skip html2canvas entirely and create PDF directly
@@ -174,7 +184,7 @@ export default function SalarySlipPage() {
             <div className="text-right mb-4">
                 <button 
                     onClick={handleDownloadPdf}
-                    className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded"
+                    className="bg-[#058CBF] hover:bg-orange-600 text-white font-bold cursor-pointer py-2 px-4 rounded"
                 >
                     Download PDF
                 </button>
@@ -183,93 +193,84 @@ export default function SalarySlipPage() {
             {/* PDF Content Starts Here */}
             <div ref={pdfRef} className="max-w-4xl mx-auto p-8 bg-white shadow-lg border rounded-lg mt-10 font-sans text-sm">
                 <div className="mb-6">
-                    <div className="text-sm font-bold bg-orange-200 p-2">Salary Slip</div>
+                <h2 className="text-center font-semibold text-gray-800  text-2xl mb-6">
+          <span className="relative inline-block">
+            Salary Payslip
+            <span
+              ref={underlineRef}
+              className="absolute left-0 bottom-0 h-[2px] bg-yellow-500 w-full"
+            ></span>
+          </span>
+        </h2>
                     <div className="mt-2">
-                        <p className="font-semibold">ISRC</p>
+                        <p className="font-semibold">Nextcore Alliance</p>
                         <p>Kurla, Mumbai</p>
                         <p>iscr.orgin.com | 8976104646</p>
                     </div>
                 </div>
 
-                <div className="flex justify-center items-center border-b pb-4">
+                <div className="flex justify-center items-center pb-4">
                     <p>PaySlip for the Month of September 2025</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8 py-8">
-                    <div>
-                        <h2 className="text-xl font-bold mb-2">Employee Pay Summary</h2>
-                        <p><strong>Employee Name:</strong> Prashant Patil</p>
-                        <p><strong>Designation:</strong> Co-Founder</p>
-                        <p><strong>Date of Joining:</strong> 8-May-2020</p>
-                        <p><strong>Pay Period:</strong> September 2025</p>
-                        <p><strong>Pay Date:</strong> 30-Sep-2025</p>
-                        <p><strong>Account #:</strong> 000-0000-4255</p>
-                        <p><strong>Location:</strong> Ghansoli</p>
-                    </div>
+        {/* Table Head */}
+<div className="grid grid-cols-4 bg-[#018ABE] text-white text-center font-semibold  py-2 border border-gray-300">
+  <div className="px-2">EARNINGS</div>
+  <div className="px-2">AMOUNT</div>
+  <div className="px-2">DEDUCTIONS</div>
+  <div className="px-2">AMOUNT</div>
+</div>
 
-                    <div className="bg-green-100 border border-green-400 text-center rounded-lg px-4 py-2 self-start">
-                        <p className="text-xs font-semibold">Employee Net Pay</p>
-                        <p className="text-2xl font-bold text-green-600">₹50,213.95</p>
-                        <p className="text-sm">Paid Days: 30</p>
-                    </div>
-                </div>
+{/* Table Body */}
+<div className="grid grid-cols-4 text-center  text-sm border-x border-b border-gray-300">
+  <div className="px-2 py-1">Basic Salary</div>
+  <div className="px-2 py-1">₹50,600.00</div>
+  <div className="px-2 py-1">EPF</div>
+  <div className="px-2 py-1">₹800.00</div>
 
-                <div className="grid grid-cols-4 bg-orange-100 font-semibold text-center">
-                    <div>EARNINGS</div>
-                    <div>AMOUNT</div>
-                    <div>DEDUCTIONS</div>
-                    <div>AMOUNT</div>
-                </div>
+  <div className="px-2 py-1">House Rent Allowance</div>
+  <div className="px-2 py-1">₹200.00</div>
+  <div className="px-2 py-1">Health Insurance</div>
+  <div className="px-2 py-1">₹356.36</div>
 
-                <div className="grid grid-cols-4 gap-x-6 gap-y-1 text-sm">
-                    <div className="space-y-1">
-                        <p>Basic Salary</p>
-                        <p>House Rent Allowance</p>
-                        <p>Conveyance</p>
-                        <p>Medical</p>
-                        <p>Special Allowance</p>
-                        <p>Other</p>
-                        <p className="font-semibold border-t pt-2">Gross Salary</p>
-                    </div>
-                    <div className="space-y-1">
-                        <p>₹50,600.00</p>
-                        <p>₹200.00</p>
-                        <p>₹150.00</p>
-                        <p>₹150.00</p>
-                        <p>₹300.00</p>
-                        <p>₹10.00</p>
-                        <p className="font-semibold border-t pt-2">₹51,410.00</p>
-                    </div>
-                    <div className="space-y-1">
-                        <p>EPF</p>
-                        <p>Health Insurance</p>
-                        <p>Professional Tax</p>
-                        <p>TDS</p>
-                        <p className="font-semibold border-t pt-2">Total Deductions</p>
-                    </div>
-                    <div className="space-y-1">
-                        <p>₹800.00</p>
-                        <p>₹356.36</p>
-                        <p>₹62.55</p>
-                        <p>₹0.00</p>
-                        <p className="font-semibold border-t pt-2">₹1,218.55</p>
-                    </div>
-                </div>
+  <div className="px-2 py-1">Conveyance</div>
+  <div className="px-2 py-1">₹150.00</div>
+  <div className="px-2 py-1">Professional Tax</div>
+  <div className="px-2 py-1">₹62.55</div>
 
-                <div className="mt-6">
-                    <h3 className="font-semibold">NET PAY</h3>
-                    <p className="text-xl font-bold text-green-600">₹50,213.95</p>
-                    <p className="text-sm italic">Amount in Words: Fifty Thousand Two Hundred and Thirteen Rupees & 95/100</p>
-                </div>
+  <div className="px-2 py-1">Medical</div>
+  <div className="px-2 py-1">₹150.00</div>
+  <div className="px-2 py-1">TDS</div>
+  <div className="px-2 py-1">₹0.00</div>
 
-                <div className="grid grid-cols-4 bg-orange-100 font-semibold text-center mt-6 mb-2">
+  <div className="px-2 py-1">Special Allowance</div>
+  <div className="px-2 py-1">₹300.00</div>
+  <div></div>
+  <div></div>
+
+  <div className="px-2 py-1">Other</div>
+  <div className="px-2 py-1">₹10.00</div>
+  <div></div>
+  <div></div>
+</div>
+
+{/* Final Total Row */}
+<div className="grid grid-cols-4 text-center font-bold text-sm bg-[#018ABE] text-white ">
+  <div className="px-2 py-2">Gross Salary</div>
+  <div className="px-2 py-2">₹51,410.00</div>
+  <div className="px-2 py-2">Total Deductions</div>
+  <div className="px-2 py-2">₹1,218.55</div>
+</div>
+
+
+                <div className="grid grid-cols-4 py-2 bg-[#018ABE] text-white font-semibold text-center mt-6 mb-2">
                     <div>REIMBURSEMENTS</div>
                     <div>AMOUNT</div>
                     <div></div>
                     <div></div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-x-6 gap-y-1 text-sm">
+                <div className="grid grid-cols-4 text-center gap-x-6 gap-y-1 text-sm">
                     <div className="space-y-1">
                         <p>Mobile Bill</p>
                         <p>Travel</p>
@@ -284,8 +285,8 @@ export default function SalarySlipPage() {
                     </div>
                 </div>
 
-                <div className="bg-orange-100 mt-6 p-4 rounded-lg text-center">
-                    <p className="text-xl font-bold text-orange-700">TOTAL NET PAYABLE: ₹50,313.95</p>
+                <div className="bg-[#018ABE] text-white mt-6 p-4 rounded-lg text-center">
+                    <p className="text-xl font-bold ">TOTAL NET PAYABLE: ₹50,313.95</p>
                     <p className="text-sm italic">(Fifty Thousand Three Hundred and Thirteen Rupees & 95/100)</p>
                 </div>
             </div>

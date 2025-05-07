@@ -1,13 +1,33 @@
 'use client';
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 
+
 export default function Userloginpage() {
+  const texts = [
+    "Quick access to your dashboard with a single login.",
+    "Secure login to manage tasks seamlessly in one place.",
+    "Stay connected to your productivity, anytime, anywhere."
+  ];
+  const [index, setIndex] = useState(0);
+    const [animate, setAnimate] = useState(true);
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setAnimate(false); // reset animation
+        setTimeout(() => {
+          setIndex((prev) => (prev + 1) % texts.length);
+          setAnimate(true); // re-trigger animation
+        }, 100); // short delay to reset class
+      }, 3000); // every 3 seconds
+  
+      return () => clearInterval(interval);
+    }, []);
   const router = useRouter();
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -81,9 +101,7 @@ export default function Userloginpage() {
       }
 
       toast.success('Login successful!');
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 1500);
+      router.push('/dashboard');
     } catch (err) {
       console.error(err);
       toast.error('Something went wrong. Please try again.');
@@ -96,14 +114,18 @@ export default function Userloginpage() {
       <Toaster position="top-center" />
       <div className="flex w-full h-screen shadow-lg rounded-none overflow-hidden">
         {/* Left Panel */}
-        <div className="w-1/2 h-full bg-[url('/leftbg.jpg')] bg-cover bg-center p-8 flex flex-col justify-center items-center relative">
+        <div className="w-1/2 h-full bg-[url('/userlogin.png')] bg-cover bg-center p-8 flex flex-col justify-center items-center relative">
           <Image src="/logo.png" alt="Task Manager Icon" width={160} height={160} className="mb-4" />
           <h1 className="text-4xl font-bold text-black mb-4">Welcome Back!</h1>
           <Image src="/logimage.png" alt="Illustration" width={400} height={320} className="mb-5" />
-          <p className="text-2xl text-black text-center px-4 rounded">
-            A simple and intuitive task manager to organize,<br />
-            track, and prioritize your tasks.
-          </p>
+          <p
+          key={index} // ensures animation re-runs
+          className={`text-black text-2xl mx-30 text-center  transition-all duration-700 ease-in-out ${
+            animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
+          }`}
+        >
+          {texts[index]}
+        </p>
         </div>
 
         {/* Right Panel */}
@@ -127,65 +149,76 @@ export default function Userloginpage() {
           <Image src="/vector_flag.png" alt="vector" height={50} width={50} className="absolute z-0" style={{ bottom: '300px', right: '75px' }} />
 
           {/* Heading */}
-          <h1 className="text-4xl font-bold text-black mb-8 z-10">User Login</h1>
+          <h1 className="text-4xl font-bold text-black mb-6 z-10">User Login</h1>
 
           {/* Card */}
-          <div className="bg-white rounded-2xl shadow-[0_7px_25px_rgba(0,0,0,0.1)] p-10 w-[550px] h-[400px] max-w-full z-10">
+          <div className="bg-white rounded-2xl shadow-[1px_4px_10px_lightgray] p-10 w-[550px] h-[400px] max-w-full z-10">
+  {/* Your content goes here */}
+
+
             <form className="space-y-4" onSubmit={handleLogin}>
               {/* Email / Phone */}
-              <div>
-                <label className="block text-sm font-medium text-black mb-1 font-poppins">
-                  E-mail / Phone
-                </label>
+              <div className="flex justify-center items-center mt-6">
+  <div className="w-full max-w-md">
+  <label className="block font-poppins font-normal text-[19px] leading-[100%] text-black mb-1 ml-1">
+  E-mail / Phone
+</label>
 
-                <input
-                  type="text"
-                  value={emailOrPhone}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const isNumeric = /^\d+$/.test(value); // Check if input is numeric
 
-                    if (isNumeric) {
-                      // Restrict phone number to exactly 10 digits
-                      if (value.length <= 10) {
-                        setEmailOrPhone(value);
-                      }
-                    } else {
-                      // Allow email input without restrictions
-                      setEmailOrPhone(value);
-                    }
-                  }}
-                  placeholder="Enter your email or phone"
-                  className="w-full px-4 py-2 rounded-xl bg-white text-black shadow-[0_7px_25px_rgba(0,0,0,0.1)] focus:outline-none"
-                />
+    <input
+      type="text"
+      value={emailOrPhone}
+      onChange={(e) => {
+        const value = e.target.value;
+        const isNumeric = /^\d+$/.test(value); // Check if input is numeric
+
+        if (isNumeric) {
+          // Restrict phone number to exactly 10 digits
+          if (value.length <= 10) {
+            setEmailOrPhone(value);
+          }
+        } else {
+          // Allow email input without restrictions
+          setEmailOrPhone(value);
+        }
+      }}
+      placeholder="Enter your email or phone"
+      className="w-full px-4 py-3 rounded-xl bg-white text-black shadow-[1px_4px_10px_lightgray] focus:outline-none"
+    />
+  </div>
+</div>
+
+{/*Password*/}
+<div className="flex justify-center items-center mt-6">
+  <div className="w-full max-w-md">
+  <label className="block font-poppins font-normal text-[19px] leading-[100%] text-black mb-1 ml-1">
+  Password
+</label>
+
+<div className="relative">
+  <input
+    type={showPassword ? 'text' : 'password'}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    placeholder="Enter above 8 character secure password"
+    required
+    minLength={8}
+    className="w-full px-4 py-3 pr-10 rounded-xl bg-white text-black shadow-[1px_4px_10px_lightgray] focus:outline-none"
+  />
+  <span
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer text-xl"
+    title={showPassword ? 'Hide password' : 'Show password'}
+  >
+    {showPassword ? <FaEyeSlash /> : <FaEye />}
+  </span>
+</div>
+
+                <Link href="/forgotpassword" className="text-base text-right block mt-4 text-[rgba(62,144,151,1)] hover:underline">
+  Forget Password?
+</Link>
+
               </div>
-
-              {/* Password */}
-              <div className="relative">
-                <label className="block text-sm font-medium text-black mb-1 font-poppins">
-                  Password
-                </label>
-
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter 8-10 character secure password"
-                  required
-                  minLength={8} // Minimum length
-                  className="w-full px-4 py-2 rounded-xl bg-white text-black shadow-[0_7px_25px_rgba(0,0,0,0.1)] focus:outline-none pr-10"
-                />
-                <span
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-[34px] right-3 text-gray-600 cursor-pointer text-xl"
-                  title={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </span>
-
-                <Link href="/forgotpassword" className="text-xs text-right block mt-4 text-[rgba(62,144,151,1)] hover:underline">
-                  Forget Password?
-                </Link>
               </div>
 
               {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -194,7 +227,7 @@ export default function Userloginpage() {
               <div className="flex justify-center mt-4">
                 <button
                   type="submit"
-                  className="w-63 py-3 bg-[rgba(109,237,248,1)] hover:bg-cyan-500 text-black font-bold rounded-xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] cursor-pointer"
+                  className="w-70 py-3 bg-[rgba(109,237,248,1)] hover:bg-cyan-500 text-black font-bold rounded-xl shadow-[1px_4px_10px_lightgray]  cursor-pointer"
                 >
                   Login
                 </button>
@@ -202,11 +235,12 @@ export default function Userloginpage() {
             </form>
 
             {/* Sign Up Prompt */}
-            <p className="text-sm mt-6 text-center  text-black font-semibold ">
+            <p className="text-lg mt-6 text-center  text-black font-semibold ">
               Don’t have an account?{' '}
-              <Link href="/signup" className="text-[rgba(62,144,151,1)] hover:underline">
-                Sign Up
-              </Link>
+              <Link href="/signup" className="text-[#3E9097] hover:underline">
+  Sign Up
+</Link>
+
             </p>
           </div>
         </div>

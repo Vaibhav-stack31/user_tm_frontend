@@ -1,30 +1,28 @@
 
 
-import LeaveTable from "@/Component/Leave/leavetable";
-import NavBar from "@/Component/Navbar/navbar";
-import Sidebar from "@/Component/Usersidebar/usersidebar";
-import React from "react";
+import LeaveTable from '@/Component/leavetable/leavetable';
+import NavBar from '@/Component/Navbar/navbar';
+import Sidebar from '@/Component/Usersidebar/usersidebar';
 
-function page() {
+import React from 'react'
+
+export default function Home() {
   return (
-    <div className="min-h-screen md:flex bg-white">
-
-      {/* Desktop Sidebar Section (visible on md+) */}
-      <div className="md:w-1/6 ">
-        <Sidebar />
+    <div className="h-screen overflow-hidden"> {/* Prevent page scroll */}
+      {/* Sidebar - Fixed */}
+      <div className="w-1/6 fixed top-0 bottom-0 left-0 bg-gray-100">
+      <Sidebar/>
       </div>
 
-      {/* Main Content */}
-      <div className="w-full md:w-5/6 md:flex-1 h-screen bg-white">
-        {/* Desktop Navbar (hidden on mobile) */}
-        <NavBar />
-<div>
-  <LeaveTable/>
-</div>
+      {/* Navbar - Fixed */}
+      <div className="fixed top-0 right-0 w-5/6 ml-[16.6667%] z-10">
+     <NavBar/>
       </div>
 
+      {/* Scrollable Content below Navbar */}
+      <div className="mt-[60px] ml-[16.6667%] h-[calc(100vh-60px)] overflow-y-auto p-4 bg-white">
+     <LeaveTable/>
+      </div>
     </div>
   );
 }
-
-export default page;
