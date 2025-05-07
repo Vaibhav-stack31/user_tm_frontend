@@ -125,44 +125,51 @@ export default function Userloginpage() {
           <Image src="/vector_flag.png" alt="vector" height={50} width={50} className="absolute z-0" style={{ bottom: '300px', right: '75px' }} />
 
           {/* Heading */}
-          <h1 className="text-4xl font-bold text-black mb-8 z-10">User Login</h1>
+          <h1 className="text-4xl font-bold text-black mb-6 z-10">User Login</h1>
 
           {/* Card */}
-          <div className="bg-white rounded-2xl shadow-[0_7px_25px_rgba(0,0,0,0.1)] p-10 w-[550px] h-[400px] max-w-full z-10">
+          <div className="bg-white rounded-2xl shadow-[1px_4px_10px_lightgray] p-10 w-[550px] h-[400px] max-w-full z-10">
+  {/* Your content goes here */}
+
+
             <form className="space-y-4" onSubmit={handleLogin}>
               {/* Email / Phone */}
-              <div>
-                <label className="block text-sm font-medium text-black mb-1 font-poppins">
-                  E-mail / Phone
-                </label>
+              <div className="flex justify-center items-center mt-6">
+  <div className="w-full max-w-md">
+  <label className="block font-poppins font-normal text-[19px] leading-[100%] text-black mb-1 ml-1">
+  E-mail / Phone
+</label>
 
-                <input
-                  type="text"
-                  value={emailOrPhone}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const isNumeric = /^\d+$/.test(value); // Check if input is numeric
 
-                    if (isNumeric) {
-                      // Restrict phone number to exactly 10 digits
-                      if (value.length <= 10) {
-                        setEmailOrPhone(value);
-                      }
-                    } else {
-                      // Allow email input without restrictions
-                      setEmailOrPhone(value);
-                    }
-                  }}
-                  placeholder="Enter your email or phone"
-                  className="w-full px-4 py-2 rounded-xl bg-white text-black shadow-[0_7px_25px_rgba(0,0,0,0.1)] focus:outline-none"
-                />
-              </div>
+    <input
+      type="text"
+      value={emailOrPhone}
+      onChange={(e) => {
+        const value = e.target.value;
+        const isNumeric = /^\d+$/.test(value); // Check if input is numeric
 
-              {/* Password */}
-              <div className="relative">
-                <label className="block text-sm font-medium text-black mb-1 font-poppins">
-                  Password
-                </label>
+        if (isNumeric) {
+          // Restrict phone number to exactly 10 digits
+          if (value.length <= 10) {
+            setEmailOrPhone(value);
+          }
+        } else {
+          // Allow email input without restrictions
+          setEmailOrPhone(value);
+        }
+      }}
+      placeholder="Enter your email or phone"
+      className="w-full px-4 py-3 rounded-xl bg-white text-black shadow-[1px_4px_10px_lightgray] focus:outline-none"
+    />
+  </div>
+</div>
+
+{/*Password*/}
+<div className="flex justify-center items-center mt-6">
+  <div className="w-full max-w-md">
+  <label className="block font-poppins font-normal text-[19px] leading-[100%] text-black mb-1 ml-1">
+  Password
+</label>
 
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -171,7 +178,7 @@ export default function Userloginpage() {
                   placeholder="Enter 8-10 character secure password"
                   required
                   minLength={8} // Minimum length
-                  className="w-full px-4 py-2 rounded-xl bg-white text-black shadow-[0_7px_25px_rgba(0,0,0,0.1)] focus:outline-none pr-10"
+                  className="w-full px-4 py-3 rounded-xl bg-white text-black shadow-[1px_4px_10px_lightgray] focus:outline-none pr-10"
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}
@@ -181,9 +188,11 @@ export default function Userloginpage() {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
 
-                <Link href="/forgotpassword" className="text-xs text-right block mt-4 text-[rgba(62,144,151,1)] hover:underline">
-                  Forget Password?
-                </Link>
+                <Link href="/forgotpassword" className="text-base text-right block mt-4 text-[rgba(62,144,151,1)] hover:underline">
+  Forget Password?
+</Link>
+
+              </div>
               </div>
 
               {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -192,7 +201,7 @@ export default function Userloginpage() {
               <div className="flex justify-center mt-4">
                 <button
                   type="submit"
-                  className="w-63 py-3 bg-[rgba(109,237,248,1)] hover:bg-cyan-500 text-black font-bold rounded-xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] cursor-pointer"
+                  className="w-70 py-3 bg-[rgba(109,237,248,1)] hover:bg-cyan-500 text-black font-bold rounded-xl shadow-[1px_4px_10px_lightgray]  cursor-pointer"
                 >
                   Login
                 </button>
@@ -200,11 +209,12 @@ export default function Userloginpage() {
             </form>
 
             {/* Sign Up Prompt */}
-            <p className="text-sm mt-6 text-center  text-black font-semibold ">
+            <p className="text-lg mt-6 text-center  text-black font-semibold ">
               Don’t have an account?{' '}
-              <Link href="/signup" className="text-[rgba(62,144,151,1)] hover:underline">
-                Sign Up
-              </Link>
+              <Link href="/signup" className="text-[#3E9097] hover:underline">
+  Sign Up
+</Link>
+
             </p>
           </div>
         </div>
