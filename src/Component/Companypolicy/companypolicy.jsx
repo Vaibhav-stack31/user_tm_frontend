@@ -1,7 +1,12 @@
-'use client'
-import React, { useState } from 'react';
+"use client";
+import React, {  useRef, useState } from "react";
+import gsap from "gsap";
 import Image from 'next/image';
+import { useGSAP } from "@gsap/react";
+ 
 
+
+ 
 const policies = [
   {
     title: "Leave Policy",
@@ -53,12 +58,23 @@ export default function Companypolicy() {
   const toggleExpand = (index) => {
     setExpandedIndex(index === expandedIndex ? null : index);
   };
-
+const underlineRef = useRef(null);
+useGSAP(() => {
+  gsap.fromTo(
+    underlineRef.current,
+    { width: "0%" },
+    { width: "100%", duration: 1, ease: "power2.out" }
+  );
+}, []);
   return (
     <div className="px-6 py-4">
-      <h2 className="text-3xl font-bold mb-8 border-b-4 border-yellow-500 inline-block">
-        Company Policy
-      </h2>
+    <h2 className="text-2xl font-bold mb-8 relative inline-block text-gray-800">
+                <span
+                    ref={underlineRef}
+                    className="absolute left-0 bottom-0 h-[2px] bg-yellow-500 w-full"
+                ></span>
+               Company Policies
+            </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 ">
         {policies.map((policy, index) => (
           <div
