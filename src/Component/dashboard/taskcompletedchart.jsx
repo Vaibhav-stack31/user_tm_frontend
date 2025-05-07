@@ -30,33 +30,20 @@ const TaskCompletedChart = ({ selected = 'This Year' }) => {
   const completeValue = data.find(d => d.name === 'Complete')?.value || 0;
 
   return (
-    <div
-      style={{
-        width: "auto",
-        height: "350px",
-        borderRadius: "20px",
-        backgroundColor: "#fff",
-        padding: "20px",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h3 style={{ margin: 0 }}>TASK Completed</h3>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            color: "green",
-            fontWeight: "bold",
-          }}
-        >
+<div
+  className="w-auto h-[350px] rounded-[20px] bg-white p-5 shadow-[1px_4px_10px_lightgray] font-sans"
+>
+
+<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+<h2 style={{ fontWeight: 'bold', fontSize: '1.25rem', marginTop: '0.5rem' }}>TASK COMPLETED</h2>
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    color: "green",
+    fontWeight: "bold",
+  }}
+>
         <div>
         <div className="flex row">
           <ArrowUp size={19} />

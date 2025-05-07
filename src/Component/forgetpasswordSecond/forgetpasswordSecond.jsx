@@ -13,11 +13,10 @@ export default function PasswordResetForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Move useEffect here to set the email on component mount
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
     if (storedEmail) {
-      setEmail(storedEmail); // Set email from localStorage
+      setEmail(storedEmail);
     }
   }, []);
 
@@ -54,8 +53,6 @@ export default function PasswordResetForm() {
         newPassword: password,
       });
 
-
-      // If the response is successful
       if (response.status === 200) {
         toast.success('Password updated successfully!');
         router.push('/');
@@ -63,39 +60,30 @@ export default function PasswordResetForm() {
         toast.error('Failed to update password. Please try again.');
       }
 
-
-      // Clear fields after submission
       setOtp('');
       setPassword('');
       setConfirmPassword('');
-
-      // Optionally, redirect the user to a login page or another relevant page
-      // router.push('/login'); // Add this line if using next.js router or similar routing
     } catch (error) {
-      // If there's an error in the API request
       toast.error('Error updating password. Please try again later.');
       console.error('Error updating password:', error);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-300 to-blue-600 relative">
+    <div
+  className="min-h-screen flex items-center justify-center bg-cover bg-center"
+  style={{ backgroundImage: "url('/loginbg.png')" }} // Replace with your actual image path
+>
+
       <Toaster position="top-center" reverseOrder={false} />
 
-      <div
-        className="absolute inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/loginbg.png')", opacity: 0.6 }}
-      ></div>
-
-      <div className="absolute left-0 bottom-1/4 w-24 h-24 bg-teal-800 opacity-20 transform rotate-45 -translate-x-8"></div>
-
-      <div className="w-full max-w-3xl bg-white rounded-lg p-8 shadow-lg z-10">
+      <div className="w-full max-w-3xl bg-white rounded-lg p-8 shadow-[1px-1px-10px-lightgray] z-10">
         <h1 className="text-3xl font-bold text-center text-[#018ABE] mb-4">Forget Password</h1>
         <h2 className="text-2xl font-extrabold text-center text-gray-900 mb-6">Request OTP</h2>
 
         <div className="pr-40 pl-40">
           <div className="mb-4">
-            <label htmlFor="otp" className="block text-gray-700 font-semibold mb-1">Enter OTP</label>
+            <label htmlFor="otp" className="block text-black font-semibold mb-1">Enter OTP</label>
             <input
               type="text"
               id="otp"
@@ -106,20 +94,21 @@ export default function PasswordResetForm() {
                   setOtp(val);
                 }
               }}
-              className="w-full p-3 bg-[#EBE7E7] rounded-xl"
+              className="w-full p-3 bg-white rounded-xl shadow-[1px_1px_10px_lightgray]"
+
               placeholder="Enter 6-digit OTP"
               required
             />
           </div>
 
           <div className="mb-4 relative">
-            <label htmlFor="password" className="block text-gray-700 font-semibold mb-1">Password</label>
+            <label htmlFor="password" className="block text-black font-semibold mb-1">Password</label>
             <input
               type={showPassword ? 'text' : 'password'}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 bg-[#EBE7E7] rounded-xl pr-10"
+               className="w-full p-3 bg-white rounded-xl shadow-[1px_1px_10px_lightgray]"
               required
             />
             <div
@@ -131,13 +120,13 @@ export default function PasswordResetForm() {
           </div>
 
           <div className="mb-6 relative">
-            <label htmlFor="confirmPassword" className="block text-gray-900 font-semibold mb-1">Confirm Password</label>
+            <label htmlFor="confirmPassword" className="block text-black font-semibold mb-1">Confirm Password</label>
             <input
               type={showConfirmPassword ? 'text' : 'password'}
               id="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-3 bg-[#EBE7E7] rounded-xl pr-10"
+               className="w-full p-3 bg-white rounded-xl shadow-[1px_1px_10px_lightgray]"
               required
             />
             <div

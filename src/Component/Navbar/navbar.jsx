@@ -3,29 +3,23 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaRegBell } from "react-icons/fa6";
-import {
-  
-  FaVideo,
-  FaUser,
-  FaCog,
-  FaSignOutAlt,
-} from 'react-icons/fa';
+import { FaRegBell, FaVideo, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useUser } from '../usersignup/usercontext';
 import { axiosInstance } from '@/lib/axiosInstance';
 import toast from 'react-hot-toast';
 
 export default function NavBar() {
-  const [userData, setUserData] = useState([
-    {
-      firstName: "",
-      email: "",
-    }
-  ]);
+  const [userData, setUserData] = useState({ firstName: "", email: "" });
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [showMeetingPopup, setShowMeetingPopup] = useState(false); // Added state for popup visibility
-  const notifications = []; // Replace with actual notifications if needed
+  const [showMeetingPopup, setShowMeetingPopup] = useState(false);
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const notifications = [];
+
+  const toggleMeetingPopup = () => {
+    setShowMeetingPopup(!showMeetingPopup);
+  };
 
   const handleProfileAction = () => {
     setShowProfileMenu(false);
@@ -40,53 +34,42 @@ export default function NavBar() {
         console.error('Failed to fetch user data:', error);
         toast.error('Failed to fetch user data.');
       }
-    }
+    };
     fetchData();
-  }, [])
-
-  const toggleMeetingPopup = () => {
-    setShowMeetingPopup(!showMeetingPopup); // Toggle popup visibility
-  };
+  }, []);
 
   return (
-    <div className="bg-gradient-to-r  from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] px-6 py-3  flex items-center min-w-full relative">
-      {/* Centered Welcome Message */}
-      <h1 className="text-3xl font-bold text-white absolute left-10 transform whitespace-nowrap">
+    <div className="bg-gradient-to-r from-[#018ABE] via-[#65B7D4] to-[#E0E2E3] px-6 py-3 flex items-center min-w-full relative">
+      <h1 className="text-3xl font-bold text-white absolute left-10 whitespace-nowrap">
         Welcome {userData.firstName || 'Guest'}!
       </h1>
 
       <div className="ml-auto flex items-center gap-12 mr-10">
-        {/* Video Icon */}
         <button title="Video Call" onClick={toggleMeetingPopup}>
           <FaVideo className="w-6 h-7 text-gray-50 cursor-pointer" />
         </button>
 
-        {/* Video Call Popup */}
         {showMeetingPopup && (
-          <div className="min-h-screen flex items-center justify-center bg-gray-400/50 bg-opacity-50 backdrop-blur-[1px] p-6 fixed inset-0 z-50">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800/50 backdrop-blur-[1px]">
             <div className="bg-white p-8 rounded-lg shadow-md text-center w-full max-w-xl relative">
-              <h2 className="text-2xl font-bold text-center mb-6 border-b-2 border-black inline-block">
+              <h2 className="text-2xl font-bold mb-6 border-b-2 border-black inline-block">
                 SCHEDULE MEETING
               </h2>
 
-              <form className="space-y-4">
+              <form className="space-y-2">
                 <input
                   type="text"
                   placeholder="Meeting Title"
                   required
-                  className="w-full p-2 border border-black rounded"
+                  className="w-full p-2 border border-black rounded placeholder-black"
                 />
-
                 <textarea
                   placeholder="Description"
                   required
-                  className="w-full p-2 border border-black rounded"
+                  className="w-full p-2 border border-black rounded placeholder-black"
                 ></textarea>
 
-                <select
-                  required
-                  className="w-full p-2 border border-black rounded"
-                >
+                <select required className="w-full p-2 border border-black rounded">
                   <option value="">Select Team Members</option>
                   <option value="Member 1">Member 1</option>
                   <option value="Member 2">Member 2</option>
@@ -98,68 +81,90 @@ export default function NavBar() {
                     <input
                       type="date"
                       required
-                      className="w-full p-2 border border-gray-300 rounded text-transparent bg-transparent"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      min={new Date().toISOString().split("T")[0]}
+                      className={`w-full p-2 border border-black rounded bg-white text-black ${date ? "" : "text-transparent"}`}
                     />
-                    <span className="absolute left-3 top-2 text-black pointer-events-none">
-                      Meeting Date
-                    </span>
+                    {!date && (
+                      <span className="absolute left-3 top-2 text-black pointer-events-none">
+                        Meeting Date
+                      </span>
+                    )}
                   </div>
 
                   <div className="relative w-1/2">
                     <input
                       type="time"
                       required
-                      className="w-full p-2 border border-gray-300 rounded text-transparent bg-transparent"
+                      value={time}
+                      onChange={(e) => setTime(e.target.value)}
+                      className={`w-full p-2 border border-black rounded bg-white ${time ? "text-black" : "text-transparent"}`}
                     />
-                    <span className="absolute left-3 top-2 text-black pointer-events-none">
-                      Meeting Time
-                    </span>
+                    {!time && (
+                      <span className="absolute left-3 top-2 text-black pointer-events-none">
+                        Meeting Time
+                      </span>
+                    )}
                   </div>
                 </div>
 
-                <select
-                  required
-                  className="w-full p-2 border border-black rounded"
-                >
+                <select required className="w-full p-2 border border-black rounded">
                   <option value="">Select Duration</option>
                   <option value="30">30 minutes</option>
                   <option value="60">1 hour</option>
                   <option value="90">1.5 hours</option>
                 </select>
+                <div className="flex items-center gap-2">
+  <label className="text-gray-800">Link</label>
+  <input
+    id="meetingLink"
+    type="url"
+    required
+    className="flex-1 p-2 border border-black rounded"
+  />
+</div>
+<div className="mt-2 flex justify-end">
+  <button
+    type="button"
+    onClick={() => {
+      const input = document.getElementById('meetingLink');
+      if (input && input.value) {
+        navigator.clipboard.writeText(input.value);
+      }
+    }}
+    className="text-sm text-blue-600 underline"
+  >
+    Copy Link
+  </button>
+</div>
 
-                <div className="flex items-center w-full">
-                  <label className="mr-2 text-gray-400 whitespace-nowrap">Link</label>
-                  <input
-                    type="url"
-                    required
-                    className="flex-1 p-2 border border-black rounded"
-                  />
-                </div>
 
-                <div className="flex justify-center">
-                  <button
-                    type="submit"
-                    style={{ backgroundColor: '#018ABE' }}
-                    className="px-6 py-2 text-white rounded hover:opacity-90"
-                  >
-                    Create
-                  </button>
-                </div>
-              </form>
+ 
 
-              {/* Close button for popup */}
-              <button
-                onClick={toggleMeetingPopup}
-                className="absolute top-2 right-2 text-2xl text-gray-500"
-              >
-                &times;
-              </button>
+{/* Spacer for layout if needed */}
+<div className="h-16"></div>
+
+{/* Absolute Create button - outside flow */}
+<div className="relative">
+  <button
+    onClick={toggleMeetingPopup}
+    className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#018ABE] rounded-xl text-2xl text-white px-8 py-2"
+  >
+    Create
+  </button>
+
+
+
+               
+              
+
+</div></form>
             </div>
           </div>
         )}
 
-        {/* Notification Icon */}
-
+        {/* Notifications */}
         <div className="relative">
           <FaRegBell
             className="cursor-pointer text-gray-50 w-10 h-6"
@@ -173,9 +178,7 @@ export default function NavBar() {
                   <div>No new notifications</div>
                 ) : (
                   notifications.map((note, idx) => (
-                    <div key={idx} className="mb-2">
-                      {note}
-                    </div>
+                    <div key={idx} className="mb-2">{note}</div>
                   ))
                 )}
               </div>
@@ -183,7 +186,7 @@ export default function NavBar() {
           )}
         </div>
 
-        {/* User Avatar with Dropdown */}
+        {/* Profile Avatar and Menu */}
         <div className="relative">
           <button
             onClick={() => {
@@ -192,28 +195,27 @@ export default function NavBar() {
             }}
             className="focus:outline-none"
           >
-            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white hover:border-gray-300 transition-all relative">
+            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white hover:border-gray-300 transition-all">
               <Image
                 src="/profile.png"
                 width={500}
                 height={500}
-                alt="Profile picture" // Add a description here
+                alt="Profile picture"
                 style={{ objectFit: 'cover' }}
               />
             </div>
           </button>
 
-          {/* Profile Dropdown Menu */}
           {showProfileMenu && (
             <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg z-10">
               <div className="p-4 border-b">
                 <div className="flex items-center space-x-3">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                  <div className="w-12 h-12 rounded-full overflow-hidden">
                     <Image
                       src="/profile.png"
                       width={500}
                       height={500}
-                      alt="Profile picture" // Add a description here
+                      alt="Profile picture"
                       style={{ objectFit: 'cover' }}
                     />
                   </div>
@@ -225,27 +227,27 @@ export default function NavBar() {
               </div>
 
               <div className="py-2">
-                <button
-                  onClick={() => handleProfileAction('view-profile')}
-                  className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100 cursor-pointer"
-                >
-                  <FaUser className="text-gray-600" />
-                  <Link href="/profile">
+                <Link href="/profile">
+                  <div
+                    onClick={() => handleProfileAction()}
+                    className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100 cursor-pointer"
+                  >
+                    <FaUser className="text-gray-600" />
                     <span>View Profile</span>
-                  </Link>
-                </button>
+                  </div>
+                </Link>
 
                 <div className="border-t my-1"></div>
 
-                <button
-                  onClick={() => handleProfileAction('logout')}
-                  className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100 text-red-500"
-                >
-                  <FaSignOutAlt />
-                  <Link href="/">
+                <Link href="/">
+                  <div
+                    onClick={() => handleProfileAction()}
+                    className="w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-gray-100 text-red-500 cursor-pointer"
+                  >
+                    <FaSignOutAlt />
                     <span>Logout</span>
-                  </Link>
-                </button>
+                  </div>
+                </Link>
               </div>
             </div>
           )}

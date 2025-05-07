@@ -62,18 +62,12 @@ const ProgressChart = ({ selected = 'This Year' }) => {
   const isPositive = progressPercent >= 0;
 
   return (
-    <div
-      style={{
-        borderRadius: '20px',
-        background: '#fff',
-        boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
-        padding: '20px',
-        maxWidth: '400px',
-        fontFamily: 'sans-serif',
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h3 style={{ fontWeight: 'bold', marginBottom: '10px' }}>PROGRESS</h3>
+    <div className="rounded-[20px] bg-white shadow-[1px_4px_10px_lightgray] p-5 max-w-[400px] font-sans">
+
+<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+  <h2 style={{ fontWeight: 'bold', fontSize: '1.25rem', marginTop: '0.5rem' }}>PROGRESS</h2>
+
+
         <span
           style={{
             color: isPositive ? 'green' : 'red',

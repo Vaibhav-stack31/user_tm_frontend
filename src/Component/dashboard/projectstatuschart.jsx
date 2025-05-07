@@ -51,10 +51,10 @@ const ProjectStatusChart = ({ selected = 'This Year' }) => {
   const { data, total } = selectedData;
 
   return (
-    <div className="w-auto h-[390px] bg-white rounded-2xl shadow-md p-4 font-sans relative">
+    <div className="w-auto h-[390px] bg-white rounded-2xl shadow-[1px_4px_10px_lightgray] p-4 font-sans relative">
       {/* Header with legend */}
-      <div className="flex justify-between items-start mb-2">
-        <h2 className="text-lg font-semibold">Projects</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+      <h2 style={{ fontWeight: 'bold', fontSize: '1.25rem', marginTop: '0.5rem' }}>PROJECTS</h2>
         <div className="text-xs space-y-1">
           <div className="flex items-center">
             <div className="w-3 h-3 rounded-full bg-blue-600 mr-2" />
