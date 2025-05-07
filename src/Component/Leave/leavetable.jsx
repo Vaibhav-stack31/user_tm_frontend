@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Toaster, toast } from 'react-hot-toast';
 import { axiosInstance } from "@/lib/axiosInstance";
+import axios from "axios";
 
 export default function LeaveTable() {
   const [leaves, setLeaves] = useState([]);
@@ -13,9 +14,8 @@ export default function LeaveTable() {
   const [toDate, setToDate] = useState('');
   const [reason, setReason] = useState('');
 
-  const [wordCount, setWordCount] = useState(0); // For word count tracking
-
-  const fileInputRef = useRef(null); // Reference for the file input
+  const [wordCount, setWordCount] = useState(0);
+  const fileInputRef = useRef(null);
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -32,7 +32,6 @@ export default function LeaveTable() {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/leave/userLeave`, {
           withCredentials: true,
         });
-
         setLeaves(response.data?.leaves || []);
       } catch (error) {
         console.error("Error fetching leaves:", error);
@@ -47,7 +46,7 @@ export default function LeaveTable() {
     setLeaves(updatedLeaves);
   };
 
-  const submitLeave = () => {
+  const submitLeave = async () => {  // Made this function async
     if (
       !leaveType || leaveType === 'Select' ||
       !approvalTo || approvalTo === 'Select' ||
@@ -57,11 +56,8 @@ export default function LeaveTable() {
       return;
     }
 
-  
-  
-
-    // Check if Reason For Leave has at least 24 characters
-    if (reason.split(/\s+/).length < 24) {
+    // Check if Reason For Leave has at least 24 words
+    if (wordCount < 24) {
       toast.error('Reason for Leave must be at least 24 words long.', { duration: 3000 });
       return;
     }
@@ -94,10 +90,14 @@ export default function LeaveTable() {
     }
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/leave/apply`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/leave/apply`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        }
+      );
 
       if (response.status === 201) {
         toast.success('Leave Submitted Successfully!');
@@ -109,22 +109,26 @@ export default function LeaveTable() {
         setReason('');
         setWordCount(0);
 
-        const updatedLeaves = await axiosInstance.get("/leave/userLeave");
-        setLeaves(updatedLeaves.data.leaves || []);
+        // Refresh leaves data
+        try {
+          const updatedResponse = await axiosInstance.get("/leave/userLeave");
+          setLeaves(updatedResponse.data.leaves || []);
+        } catch (error) {
+          console.error("Error refreshing leaves:", error);
+          toast.error('Failed to refresh leave data.');
+        }
       } else {
         toast.error('Failed to submit leave.');
       }
     } catch (error) {
       console.error('Submit error:', error);
-      toast.error('Error submitting leave. Try again later.');
+      toast.error(error.response?.data?.message || 'Error submitting leave. Try again later.');
     }
   };
 
   const handleReasonChange = (e) => {
     const updatedReason = e.target.value;
     setReason(updatedReason);
-
-    // Split by spaces to count words
     const words = updatedReason.trim().split(/\s+/);
     setWordCount(words.filter(word => word).length);
   };
@@ -202,10 +206,9 @@ export default function LeaveTable() {
                   className="rounded px-4 py-2 w-[250px] shadow-lg outline-none focus:ring-2 focus:ring-blue-300"
                 >
                   <option>Select</option>
-                  <option>Ayaan Raje</option>
-                  <option>Prashant Patil</option>
-                  <option>Shams Ali Shaikh</option>
-                  <option>Awab Fakih</option>
+                  {approvers.map(approver => (
+                    <option key={approver.id} value={approver.name}>{approver.name}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -223,36 +226,33 @@ export default function LeaveTable() {
             </div>
 
             <div className="mb-6 mt-6 flex items-start space-x-4">
-  <label htmlFor="reason" className="font-bold mt-2 whitespace-nowrap">Reason For Leave</label>
-  <div className="flex flex-col">
-    <textarea
-      id="reason"
-      value={reason}
-      onChange={handleReasonChange}
-      className="rounded px-4 py-2 w-[750px] h-[130px] resize-none shadow-lg"></textarea>
-
-    <div className="text-right text-gray-600 text-sm">{wordCount}/ 24</div>
-  </div>
-</div>
-
-
+              <label htmlFor="reason" className="font-bold mt-2 whitespace-nowrap">Reason For Leave</label>
+              <div className="flex flex-col">
+                <textarea
+                  id="reason"
+                  value={reason}
+                  onChange={handleReasonChange}
+                  className="rounded px-4 py-2 w-[750px] h-[130px] resize-none shadow-lg"
+                ></textarea>
+                <div className="text-right text-gray-600 text-sm">{wordCount}/24 words</div>
+              </div>
+            </div>
 
             <div className="text-center space-x-4">
               <button
                 onClick={() => setShowModal(false)}
-                className="border border-blue-500 text-blue-500 bg-white px-8 py-3  shadow-md hover:bg-blue-50 font-bold self-start mt-6 rounded-lg"
+                className="border border-blue-500 text-blue-500 bg-white px-8 py-3 shadow-md hover:bg-blue-50 font-bold self-start mt-6 rounded-lg"
               >
                 Cancel
               </button>
 
               <button
                 onClick={submitLeave}
-                className="bg-[#018ABE] font-bold text-white px-8 py-3  hover:bg-#018ABE self-start mt-3 rounded-lg"
+                className="bg-[#018ABE] font-bold text-white px-8 py-3 hover:bg-[#017ba9] self-start mt-3 rounded-lg"
               >
                 Submit
               </button>
             </div>
-
           </div>
         </div>
       )}
@@ -285,20 +285,17 @@ export default function LeaveTable() {
                   <tr key={leave._id || index} className="hover:bg-gray-50">
                     <td className="p-3 border-t">{index + 1}</td>
                     <td className="p-3 border-t">{leave.managerId || 'N/A'}</td>
-                    <td className="p-3 border-t ">{leave.reason}</td>
+                    <td className="p-3 border-t">{leave.reason}</td>
                     <td className="p-3 border-t">{leave.createdAt?.split('T')[0]}</td>
                     <td className="p-3 border-t">{new Date(leave.fromDate).toLocaleDateString('en-GB')}</td>
                     <td className="p-3 border-t">{new Date(leave.toDate).toLocaleDateString('en-GB')}</td>
                     <td className="p-3 border-t">{leave.days || '-'}</td>
                     <td className="p-3 border-t">
                       <span
-                        className={`px-2 py-1 rounded-full text-white ${leave.status === 'Accepted'
-                          ? 'bg-green-500'
-                          : leave.status === 'Rejected'
-                            ? 'bg-red-500'
-                            : leave.status === 'Pending'
-                              ? 'bg-yellow-500'
-                              : 'bg-gray-500'
+                        className={`px-2 py-1 rounded-full text-white ${leave.status === 'Accepted' ? 'bg-green-500' :
+                            leave.status === 'Rejected' ? 'bg-red-500' :
+                              leave.status === 'Pending' ? 'bg-yellow-500' :
+                                'bg-gray-500'
                           }`}
                       >
                         {leave.status}
@@ -308,12 +305,9 @@ export default function LeaveTable() {
                 ))
               )}
             </tbody>
-
           </table>
         </div>
       </div>
-
-
     </div>
   );
 }
