@@ -1,13 +1,11 @@
-//import Calendar from '@/components/calendardropdwon/calendar';
+
 import Calendar from '@/Component/calendardropdown/calendar';
 import Categories from '@/Component/calendardropdown/categerious';
 import ToDo from '@/Component/calendardropdown/todo';
 import NavBar from '@/Component/Navbar/navbar';
 import Sidebar from '@/Component/Usersidebar/usersidebar';
-// Categories from '@/components/calendardropdwon/categerious';
-//import ToDo from '@/components/calendardropdwon/todo';
-//import Navbar from '@/components/layout/navbar';
-//import Sidebar from '@/components/layout/sidebar';
+
+
 import React from 'react';
 
 export default function Home() {
@@ -15,12 +13,12 @@ export default function Home() {
     <div>
       {/* Sidebar - Fixed */}
       <div className="w-1/6 fixed top-0 bottom-0 left-0 bg-gray-100">
-       <Sidebar/>
+  <Sidebar/>
       </div>
 
       {/* Navbar - Fixed */}
       <div className="fixed top-0 right-0 w-5/6 ml-[16.6667%] z-10">
-       <NavBar/>
+    <NavBar/>
       </div>
 
       {/* Main Content Area */}

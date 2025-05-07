@@ -1,6 +1,9 @@
-'use client';
-import { useEffect, useRef } from "react";
+'use client'; // Add this line at the top to indicate it's a client-side component
+
+import { useEffect, useRef, useState } from "react"; // Import useState here
 import gsap from "gsap";
+import DatePicker from "react-datepicker"; // Import DatePicker
+import "react-datepicker/dist/react-datepicker.css"; // Import the required DatePicker styles
 
 const months = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -23,6 +26,8 @@ const Yearcalendar = () => {
 
   const underlineRef = useRef(null);
 
+  const [selectedDate, setSelectedDate] = useState(null); // Add the useState hook for selectedDate
+
   useEffect(() => {
     gsap.fromTo(
       underlineRef.current,
@@ -42,6 +47,17 @@ const Yearcalendar = () => {
           ></span>
         </span>
       </h2>
+
+      {/* DatePicker component */}
+      <div className="mb-4 text-center">
+        <h3 className="text-lg mb-2">Select a Date</h3>
+        <DatePicker
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)} // Update selected date
+          inline
+          calendarStartDay={0}
+        />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-xs mx-auto w-[1100px]">
         {months.map((month, monthIndex) => {
