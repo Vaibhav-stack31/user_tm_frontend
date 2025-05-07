@@ -53,8 +53,15 @@ export default function NavBar() {
         </button>
 
         {showMeetingPopup && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800/50 backdrop-blur-[1px]">
-            <div className="bg-white p-8 rounded-lg shadow-md text-center w-full max-w-xl relative">
+          <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800/50 backdrop-blur-[1px]"
+          onClick={() => setShowMeetingPopup(false)} // ⬅ closes popup on outside click
+        >
+          <div
+            className="bg-white p-8 rounded-lg shadow-md text-center w-full max-w-xl relative"
+            onClick={(e) => e.stopPropagation()} // ⬅ prevents inner click from closing
+          >
+        
               <h2 className="text-2xl font-bold mb-6 border-b-2 border-black inline-block">
                 SCHEDULE MEETING
               </h2>
