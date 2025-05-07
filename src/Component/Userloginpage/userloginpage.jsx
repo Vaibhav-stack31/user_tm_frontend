@@ -171,22 +171,24 @@ export default function Userloginpage() {
   Password
 </label>
 
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter 8-10 character secure password"
-                  required
-                  minLength={8} // Minimum length
-                  className="w-full px-4 py-3 rounded-xl bg-white text-black shadow-[1px_4px_10px_lightgray] focus:outline-none pr-10"
-                />
-                <span
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-[34px] right-3 text-gray-600 cursor-pointer text-xl"
-                  title={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </span>
+<div className="relative">
+  <input
+    type={showPassword ? 'text' : 'password'}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    placeholder="Enter 8-10 character secure password"
+    required
+    minLength={8}
+    className="w-full px-4 py-3 pr-10 rounded-xl bg-white text-black shadow-[1px_4px_10px_lightgray] focus:outline-none"
+  />
+  <span
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer text-xl"
+    title={showPassword ? 'Hide password' : 'Show password'}
+  >
+    {showPassword ? <FaEyeSlash /> : <FaEye />}
+  </span>
+</div>
 
                 <Link href="/forgotpassword" className="text-base text-right block mt-4 text-[rgba(62,144,151,1)] hover:underline">
   Forget Password?
