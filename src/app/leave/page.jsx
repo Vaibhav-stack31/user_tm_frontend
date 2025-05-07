@@ -1,3 +1,4 @@
+
 import Leave from "@/Component/Leave/leave";
 import NavBar from "@/Component/Navbar/navbar";
 import Sidebar from "@/Component/Usersidebar/usersidebar";
@@ -17,10 +18,10 @@ function page() {
         {/* Desktop Navbar (hidden on mobile) */}
         <NavBar />
         <div>
-          <Leave />
+     
         </div>
       </div>
-
+<Leave/>
     </div>
   );
 }

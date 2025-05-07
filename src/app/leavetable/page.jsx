@@ -1,6 +1,6 @@
 
 
-import LeaveTable from "@/Component/Leave/leavetable";
+import LeaveTable from "@/Component/leavetable/leavetable";
 import NavBar from "@/Component/Navbar/navbar";
 import Sidebar from "@/Component/Usersidebar/usersidebar";
 import React from "react";
@@ -19,10 +19,10 @@ function page() {
         {/* Desktop Navbar (hidden on mobile) */}
         <NavBar />
 <div>
-  <LeaveTable/>
+
 </div>
       </div>
-
+<LeaveTable/>
     </div>
   );
 }
