@@ -343,10 +343,10 @@ export default function Timeline() {
             <span className="text-2xl font-bold text-gray-800">sheet</span>
 
             <div className="flex justify-end gap-8 mb-4">
-                <button onClick={handleEditTimesheet} className="bg-[#018ABE] hover:bg-[#0177a6] text-white font-semibold px-4 py-2 rounded-md">
+                <button onClick={handleEditTimesheet} className="bg-[#018ABE] cursor-pointer  hover:bg-[#0177a6] text-white font-semibold px-4 py-2 rounded-md">
                     Edit Timesheet
                 </button>
-                <button onClick={handleAddTask} className="bg-[#018ABE] hover:bg-[#0177a6] text-white font-semibold px-4 py-2 rounded-md">
+                <button onClick={handleAddTask} className="bg-[#018ABE] cursor-pointer  hover:bg-[#0177a6] text-white font-semibold px-4 py-2 rounded-md">
                     Add Task
                 </button>
             </div>
@@ -358,54 +358,57 @@ export default function Timeline() {
                         type="date"
                         value={date}
                         onChange={handleDateChange}
-                        className="rounded-md p-1.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                        className="rounded-md p-1.5 border cursor-pointer border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
                     />
                 </div>
 
                 <div className="flex flex-col w-[260px] relative">
-                    <label className="mb-1 font-medium text-gray-700">Select Manager</label>
-                    <button
-                        onClick={() => !isFilledTimesheet && setShowDropdown(!showDropdown)}
-                        className={`border border-gray-300 rounded-md px-4 py-2 flex items-center justify-between ${isFilledTimesheet ? 'bg-gray-100 cursor-not-allowed' : 'cursor-pointer'}`}
-                        disabled={isFilledTimesheet}
-                    >
-                        <span className="text-sm text-gray-800">{`All Selected (${selectedManagers.length})`}</span>
-                        <FiChevronDown className="text-gray-600 text-lg" />
-                    </button>
-                    {showDropdown && !isFilledTimesheet && (
-                        <div className="absolute top-full mt-1 bg-white border border-gray-200 rounded-md w-full z-10">
-                            {["Awab Fakih", "Ayaan Raje", "Prashant Patil"].map((managerName) => (
-                                <label key={managerName} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                    <input
-                                        className="w-5 h-5 text-blue-600"
-                                        type="checkbox"
-                                        checked={selectedManagers.includes(managerName)}
-                                        onChange={() =>
-                                            setSelectedManagers((prev) =>
-                                                prev.includes(managerName)
-                                                    ? prev.filter((m) => m !== managerName)
-                                                    : [...prev, managerName]
-                                            )
-                                        }
-                                    />
-                                    {managerName}
-                                </label>
-                            ))}
-                        </div>
-                    )}
-                </div>
+  <label className="mb-1 font-medium text-gray-700">Select Manager</label>
+  <button
+    onClick={() => !isFilledTimesheet && setShowDropdown(!showDropdown)}
+    className={`border border-gray-300 cursor-pointer rounded-md px-4 py-2 flex items-center justify-between ${isFilledTimesheet ? 'bg-gray-100 cursor-not-allowed' : 'cursor-pointer'}`}
+    disabled={isFilledTimesheet}
+  >
+    <span className="text-sm text-gray-800">{`All Selected (${selectedManagers.length})`}</span>
+    <FiChevronDown className="text-gray-600 text-lg" />
+  </button>
+  {showDropdown && !isFilledTimesheet && (
+    <div
+      className="absolute top-full mt-1 bg-white border border-gray-200 rounded-md w-full z-10"
+      onMouseLeave={() => setShowDropdown(false)} // Close dropdown when mouse leaves
+    >
+      {["Awab Fakih", "Ayaan Raje", "Prashant Patil"].map((managerName) => (
+        <label key={managerName} className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer">
+          <input
+            className="w-5 h-5 text-blue-600"
+            type="checkbox"
+            checked={selectedManagers.includes(managerName)}
+            onChange={() =>
+              setSelectedManagers((prev) =>
+                prev.includes(managerName)
+                  ? prev.filter((m) => m !== managerName)
+                  : [...prev, managerName]
+              )
+            }
+          />
+          {managerName}
+        </label>
+      ))}
+    </div>
+  )}
+</div>
 
                 <div className="flex gap-4">
                     <button
                         onClick={() => addTimelineItem("Meeting")}
-                        className={`px-4 py-2 rounded-lg ${isFilledTimesheet ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#018ABE] text-white'}`}
+                        className={`px-4 py-2 cursor-pointer  rounded-lg ${isFilledTimesheet ? 'bg-gray-400 ' : 'bg-[#018ABE] text-white  '}`}
                         disabled={isFilledTimesheet}
                     >
                         Add Meeting
                     </button>
                     <button
                         onClick={() => addTimelineItem("Miscellaneous")}
-                        className={`px-4 py-2 rounded-lg ${isFilledTimesheet ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#018ABE] text-white'}`}
+                        className={`px-4 py-2 cursor-pointer rounded-lg ${isFilledTimesheet ? 'bg-gray-400 ' : 'bg-[#018ABE] text-white  '}`}
                         disabled={isFilledTimesheet}
                     >
                         Add Miscellaneous

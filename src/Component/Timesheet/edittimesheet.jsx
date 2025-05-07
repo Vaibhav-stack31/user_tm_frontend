@@ -340,7 +340,7 @@ export default function EditTimeSheet() {
             <div className="flex justify-end mt-4">
                 <button
                     onClick={exportToExcel}
-                    className={`bg-[#018ABE] text-white px-4 py-2 rounded-md hover:bg-[#83c7e1] ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`bg-[#018ABE] text-white px-4 py-2 cursor-pointer  rounded-md hover:bg-[#83c7e1] ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     disabled={isLoading}
                 >
                     Export
@@ -359,16 +359,7 @@ export default function EditTimeSheet() {
                     />
                 </div>
 
-                <div className="flex flex-col w-[260px] relative">
-                    <label className="mb-1 font-medium text-gray-700">Project Name</label>
-                    <input
-                        type="text"
-                        value={projectName}
-                        onChange={(e) => setProjectName(e.target.value)}
-                        className="rounded-md p-1.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 shadow-[0px_2px_0px_rgba(0,0,0,0.2)]"
-                        disabled={isLoading}
-                    />
-                </div>
+              
 
                 <div className="flex flex-col w-[260px] relative">
                     <label className="mb-1 font-medium text-gray-700">Select Manager</label>
@@ -409,20 +400,30 @@ export default function EditTimeSheet() {
                 <div className="flex gap-4">
                     <button
                         onClick={() => addTimelineItem("meeting")}
-                        className={`bg-black text-white px-4 py-2 rounded-lg cursor-pointer ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-[#018ABE] text-white px-4 py-2 rounded-lg cursor-pointer ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={isLoading}
                     >
                         Add Meeting
                     </button>
                     <button
                         onClick={() => addTimelineItem("miscellaneous")}
-                        className={`bg-black text-white px-4 py-2 rounded-lg cursor-pointer ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`bg-[#018ABE] text-white px-4 py-2 rounded-lg cursor-pointer ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={isLoading}
                     >
                         Add Miscellaneous
                     </button>
                 </div>
             </div>
+            <div className="flex flex-row  relative items-center mb-8 mt-4">
+  <label className="mr-2 font-medium text-gray-700 whitespace-nowrap">Project Name</label>
+  <input
+    type="text"
+    value={projectName}
+    onChange={(e) => setProjectName(e.target.value)}
+    className="rounded-md p-1.5 border w-[500px] border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 shadow-[0px_2px_0px_rgba(0,0,0,0.2)]"
+    disabled={isLoading}
+  />
+</div>
 
             {/* Timeline Display */}
             <div className="rounded-lg shadow-[0px_2px_0px_rgba(0,0,0,0.2)] border-t-2 border-[#018ABE] overflow-hidden">
@@ -525,7 +526,7 @@ export default function EditTimeSheet() {
             <div className="mt-6 flex justify-center items-center">
                 <button
                     onClick={handleSubmit}
-                    className={`bg-[#018ABE] text-white px-6 py-2 rounded-lg hover:bg-[#83c7e1] ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`bg-[#018ABE] text-white px-6 py-2 cursor-pointer rounded-lg hover:bg-[#83c7e1] ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     disabled={isLoading}
                 >
                     {isLoading ? 'Updating...' : 'Update'}
