@@ -94,7 +94,7 @@ export default function Userloginpage() {
       <Toaster position="top-center" />
       <div className="flex w-full h-screen shadow-lg rounded-none overflow-hidden">
         {/* Left Panel */}
-        <div className="w-1/2 h-full bg-[url('/leftbg.jpg')] bg-cover bg-center p-8 flex flex-col justify-center items-center relative">
+        <div className="w-1/2 h-full bg-[url('/userlogin.png')] bg-cover bg-center p-8 flex flex-col justify-center items-center relative">
           <Image src="/logo.png" alt="Task Manager Icon" width={160} height={160} className="mb-4" />
           <h1 className="text-4xl font-bold text-black mb-4">Welcome Back!</h1>
           <Image src="/logimage.png" alt="Illustration" width={400} height={320} className="mb-5" />
