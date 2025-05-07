@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Toaster, toast } from 'react-hot-toast';
 import axios from 'axios';
+import { axiosInstance } from "@/lib/axiosInstance";
 
 export default function LeaveTable() {
   const [leaves, setLeaves] = useState([]);
@@ -16,19 +17,19 @@ export default function LeaveTable() {
   const today = new Date().toISOString().split('T')[0];
 
   const approvers = [
-    { name: 'Ayaan Raje', id: '660c1234567890abcdef1234' },
-    { name: 'Prashant Patil', id: '660c1234567890abcdef5678' },
-    { name: 'Shams Ali Shaikh', id: '660c1234567890abcdef9012' },
-    { name: 'Awab Fakih', id: '660c1234567890abcdef3456' },
+    { name: 'Ayaan Raje', id: 'Ayaan Raje' },
+    { name: 'Prashant Patil', id: 'Prashant Patil' },
+    { name: 'Shams Ali Shaikh', id: 'Shams Ali Shaikh' },
+    { name: 'Awab Fakih', id: 'Awab Fakih' },
   ];
 
   useEffect(() => {
     const fetchLeaves = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/leave/userLeave`, {
-          withCredentials: true, 
+          withCredentials: true,
         });
-        
+
         setLeaves(response.data?.leaves || []);
       } catch (error) {
         console.error("Error fetching leaves:", error);
@@ -101,8 +102,8 @@ export default function LeaveTable() {
         setReason('');
         setWordCount(0);
 
-        //const updatedLeaves = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/leave/userLeave`);
-        // setLeaves(updatedLeaves.data.leaves || []); 
+        const updatedLeaves = await axiosInstance.get("/leave/userLeave");
+        setLeaves(updatedLeaves.data.leaves || []);
       } else {
         toast.error('Failed to submit leave.');
       }
@@ -187,7 +188,7 @@ export default function LeaveTable() {
                 </select>
               </div>
             </div>
-            
+
             <div className="mb-6">
               <label className="font-bold block mb-1">
                 Attachment {leaveType === 'Sick Leave' ? '(required)' : '(optional)'}
@@ -210,7 +211,7 @@ export default function LeaveTable() {
               <div className="text-right text-sm  text-gray-600">{wordCount}/ Min. 24</div>
             </div>
 
-            
+
 
             <div className="text-center space-x-4">
               <button
@@ -232,49 +233,61 @@ export default function LeaveTable() {
 
       {/* Table */}
       <div className="rounded-lg shadow-lg overflow-hidden mt-6">
-  <div className="overflow-x-auto">
-    <table className="min-w-full text-sm border-separate border-spacing-0">
-      <thead style={{ backgroundColor: '#018ABE' }} className="text-white">
-        <tr>
-          <th className="p-3 border-r border-white rounded-tl-lg">Sr No.</th>
-          <th className="p-3 border-r border-white">Request To</th>
-          <th className="p-3 border-r border-white">Reason</th>
-          <th className="p-3 border-r border-white">Apply Date</th>
-          <th className="p-3 border-r border-white">From</th>
-          <th className="p-3 border-r border-white">To</th>
-          <th className="p-3 border-r border-white">Days</th>
-          <th className="p-3">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {leaves.map((leave, index) => (
-          <tr key={leave._id || index} className="hover:bg-gray-50">
-            <td className="p-3 border-t">{index + 1}</td>
-            <td className="p-3 border-t">{leave.managerId || 'N/A'}</td>
-            <td className="p-3 border-t">{leave.reason}</td>
-            <td className="p-3 border-t">{leave.createdAt?.split('T')[0]}</td>
-            <td className="p-3 border-t">{new Date(leave.fromDate).toLocaleDateString('en-GB')}</td>
-            <td className="p-3 border-t">{new Date(leave.toDate).toLocaleDateString('en-GB')}</td>
-            <td className="p-3 border-t">{leave.days || '-'}</td>
-            <td className="p-3 border-t">
-              <span
-                className={`px-2 py-1 rounded-full text-white ${
-                  leave.status === 'Accepted' ? 'bg-green-500' :
-                  leave.status === 'Rejected' ? 'bg-red-500' :
-                  leave.status === 'Pending' ? 'bg-yellow-500' : 'bg-gray-500'
-                }`}
-              >
-                {leave.status}
-              </span>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-  
-  
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm border-separate border-spacing-0">
+            <thead style={{ backgroundColor: '#018ABE' }} className="text-white">
+              <tr>
+                <th className="p-3 border-r border-white rounded-tl-lg">Sr No.</th>
+                <th className="p-3 border-r border-white">Request To</th>
+                <th className="p-3 border-r border-white">Reason</th>
+                <th className="p-3 border-r border-white">Apply Date</th>
+                <th className="p-3 border-r border-white">From</th>
+                <th className="p-3 border-r border-white">To</th>
+                <th className="p-3 border-r border-white">Days</th>
+                <th className="p-3">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaves.length === 0 ? (
+                <tr>
+                  <td colSpan="8" className="text-center text-gray-500 py-4">
+                    No leave applications found.
+                  </td>
+                </tr>
+              ) : (
+                leaves.map((leave, index) => (
+                  <tr key={leave._id || index} className="hover:bg-gray-50">
+                    <td className="p-3 border-t">{index + 1}</td>
+                    <td className="p-3 border-t">{leave.managerId || 'N/A'}</td>
+                    <td className="p-3 border-t ">{leave.reason}</td>
+                    <td className="p-3 border-t">{leave.createdAt?.split('T')[0]}</td>
+                    <td className="p-3 border-t">{new Date(leave.fromDate).toLocaleDateString('en-GB')}</td>
+                    <td className="p-3 border-t">{new Date(leave.toDate).toLocaleDateString('en-GB')}</td>
+                    <td className="p-3 border-t">{leave.days || '-'}</td>
+                    <td className="p-3 border-t">
+                      <span
+                        className={`px-2 py-1 rounded-full text-white ${leave.status === 'Accepted'
+                          ? 'bg-green-500'
+                          : leave.status === 'Rejected'
+                            ? 'bg-red-500'
+                            : leave.status === 'Pending'
+                              ? 'bg-yellow-500'
+                              : 'bg-gray-500'
+                          }`}
+                      >
+                        {leave.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+
+          </table>
+        </div>
       </div>
-    );
-  }
+
+
+    </div>
+  );
+}
