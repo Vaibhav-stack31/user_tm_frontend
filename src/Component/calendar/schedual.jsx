@@ -7,11 +7,24 @@ import toast from 'react-hot-toast';
 
 export default function SchedualPage({ initialDate, addEvent, closeModal }) {
   const [selectedDate, setSelectedDate] = useState(initialDate || '');
+  const [title, setTitle] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [title, setTitle] = useState('');
-  const [isStartValid, setIsStartValid] = useState(true);
-  const [isEndValid, setIsEndValid] = useState(true);
+  const [participants, setParticipants] = useState('');
+  const [isStartOpen, setIsStartOpen] = useState(false);
+  const [isEndOpen, setIsEndOpen] = useState(false);
+
+  const generateTimes = () => {
+    const times = [];
+    for (let i = 0; i < 24; i++) {
+      const hour = i % 12 === 0 ? 12 : i % 12;
+      const ampm = i < 12 ? 'am' : 'pm';
+      times.push(`${hour.toString().padStart(2, '0')}:00 ${ampm}`);
+    }
+    return times;
+  };
+
+  const times = generateTimes();
 
   useEffect(() => {
     if (initialDate) {
@@ -19,42 +32,32 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
     }
   }, [initialDate]);
 
-  const handleTimeInput = (value, setter, setValid) => {
-    let newValue = value.replace(/[^\d]/g, '');
-    if (newValue.length > 4) newValue = newValue.slice(0, 4);
-
-    if (newValue.length >= 3) {
-      newValue = newValue.slice(0, 2) + ':' + newValue.slice(2);
-    }
-
-    const [hh, mm] = newValue.split(':');
-    const isValid =
-      hh &&
-      mm &&
-      /^\d{2}$/.test(hh) &&
-      /^\d{2}$/.test(mm) &&
-      Number(hh) >= 0 &&
-      Number(hh) <= 23 &&
-      Number(mm) >= 0 &&
-      Number(mm) <= 59;
-
-    setter(newValue);
-    setValid(isValid);
+  const parseTime = (timeStr) => {
+    const [time, modifier] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (modifier === 'pm' && hours !== 12) hours += 12;
+    if (modifier === 'am' && hours === 12) hours = 0;
+    return hours * 60 + minutes;
   };
 
   const handleSchedule = () => {
-    if (isStartValid && isEndValid && selectedDate && startTime && endTime && title) {
-      addEvent(selectedDate, 'Meeting');
-      toast.success('Meeting scheduled successfully!');
-      console.log({
+    const validStart = !!startTime;
+    const validEnd = !!endTime;
+    const validRange = validStart && validEnd && parseTime(startTime) < parseTime(endTime);
+
+    if (selectedDate && title && validStart && validRange && participants) {
+      const meeting = {
         date: selectedDate,
         startTime,
         endTime,
         title,
-      });
+        participants,
+      };
+      addEvent(meeting);
+      toast.success('Meeting scheduled successfully!');
       closeModal();
     } else {
-      toast.error('Please enter valid time, date, and title.');
+      toast.error('Please enter valid time, date, title, and participants.');
     }
   };
 
@@ -63,50 +66,98 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
     setStartTime('');
     setEndTime('');
     setTitle('');
+    setParticipants('');
     closeModal();
   };
 
   return (
     <div className="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-      {/* Date */}
+      {/* Date Picker */}
       <div className="mb-4">
         <label className="flex items-center text-sm text-gray-600 font-medium gap-2 mb-1">
           <LuCalendarClock className="text-xl" />
           <input
             type="date"
             value={selectedDate}
+            min={new Date().toISOString().split('T')[0]}
             onChange={(e) => setSelectedDate(e.target.value)}
             className="ml-2 w-full max-w-[180px] focus:outline-none py-1 text-sm text-gray-700 rounded px-2 appearance-none"
           />
         </label>
       </div>
 
-      {/* Time */}
-      <div className="flex items-center gap-2 mb-4 border-b pb-2">
-        <label className="text-sm text-[#717171] font-Poppins min-w-[50px]">Time :</label>
-        <input
-          type="text"
-          placeholder="9:00 am"
-          maxLength={5}
-          value={startTime}
-          onChange={(e) => handleTimeInput(e.target.value, setStartTime, setIsStartValid)}
-          className={`bg-[#F1F2F8] px-3 py-1 rounded-lg text-sm text-center w-[90px] ${
-            !isStartValid ? 'border border-red-500' : ''
-          }`}
-          style={{ boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)' }}
-        />
-        <span className="text-gray-600">-</span>
-        <input
-          type="text"
-          placeholder="11:00 am"
-          maxLength={5}
-          value={endTime}
-          onChange={(e) => handleTimeInput(e.target.value, setEndTime, setIsEndValid)}
-          className={`w-[90px] bg-[#F1F2F8] px-3 py-1 rounded-lg text-Poppins text-center text-[#717171] ${
-            !isEndValid ? 'border border-red-500' : ''
-          }`}
-          style={{ boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)' }}
-        />
+      {/* Time Pickers */}
+      <div className="flex items-center gap-2 mb-4">
+        <label className="text-sm text-[#717171] font-medium min-w-[50px]">Time:</label>
+
+        {/* Start Time */}
+        <div className="relative">
+          <button
+            onClick={() => setIsStartOpen(!isStartOpen)}
+            className="flex items-center justify-between gap-1 -ml-5 px-4 py-[2px] text-sm rounded-full bg-[#F1F2F8] text-[#333] w-[120px] border border-gray-200"
+          >
+            <span className="truncate">{startTime || 'Start'}</span>
+            <IoMdArrowDropdown className="text-gray-600 text-base" />
+          </button>
+
+          {isStartOpen && (
+            <div
+              onMouseLeave={() => setIsStartOpen(false)}
+              className="absolute z-10 mt-2 w-[120px] bg-white rounded-lg shadow-lg max-h-40 overflow-y-auto p-1"
+            >
+              {times.map((time, index) => (
+                <button
+                  key={`start-${index}`}
+                  onClick={() => {
+                    setStartTime(time);
+                    setIsStartOpen(false);
+                  }}
+                  className={`w-full text-sm text-left px-2 py-[4px] rounded-full ${
+                    startTime === time ? 'bg-blue-500 text-white' : 'text-gray-800 bg-white'
+                  } hover:bg-blue-100`}
+                >
+                  {time}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Dash */}
+        <span className="text-[#717171] text-sm">-</span>
+
+        {/* End Time */}
+        <div className="relative">
+          <button
+            onClick={() => setIsEndOpen(!isEndOpen)}
+            className="flex items-center justify-between gap-1 px-4 py-[2px] text-sm rounded-full bg-[#F1F2F8] text-[#333] w-[120px] border border-gray-200"
+          >
+            <span className="truncate">{endTime || 'End'}</span>
+            <IoMdArrowDropdown className="text-gray-600 text-base" />
+          </button>
+
+          {isEndOpen && (
+            <div
+              onMouseLeave={() => setIsEndOpen(false)}
+              className="absolute z-10 mt-2 w-[120px] bg-white rounded-lg shadow-lg max-h-40 overflow-y-auto p-1"
+            >
+              {times.map((time, index) => (
+                <button
+                  key={`end-${index}`}
+                  onClick={() => {
+                    setEndTime(time);
+                    setIsEndOpen(false);
+                  }}
+                  className={`w-full text-sm text-left px-2 py-[4px] rounded-full ${
+                    endTime === time ? 'bg-green-500 text-white' : 'text-gray-800 bg-white'
+                  } hover:bg-green-100`}
+                >
+                  {time}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Participants */}
@@ -116,9 +167,10 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
         </label>
         <div className="relative">
           <select
+            value={participants}
+            onChange={(e) => setParticipants(e.target.value)}
             className="w-58 border border-[#877575] rounded-lg px-2 py-2 text-sm text-[#717171] bg-[#F8FDFF] font-poppins appearance-none cursor-pointer"
             style={{ boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.15)' }}
-            defaultValue=""
           >
             <option value="" disabled>
               Select Email Address
@@ -128,7 +180,7 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
             <option value="user3@example.com">user3@example.com</option>
             <option value="user4@example.com">user4@example.com</option>
           </select>
-          <IoMdArrowDropdown className="absolute top-1/2 right-[50%] transform -translate-y-1/2 text-gray-600 pointer-events-none" />
+          <IoMdArrowDropdown className="absolute top-1/2 right-[20%] transform -translate-y-1/2 text-gray-600 pointer-events-none" />
         </div>
       </div>
 
@@ -143,7 +195,7 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
         />
       </div>
 
-      {/* Buttons */}
+      {/* Action Buttons */}
       <div className="flex justify-end items-center gap-6 text-sm font-semibold">
         <button onClick={handleCancel} className="text-black hover:underline">
           Cancel
