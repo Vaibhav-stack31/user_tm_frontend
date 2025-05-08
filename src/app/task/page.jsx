@@ -2,6 +2,7 @@
 
 import NavBar from '@/Component/Navbar/navbar';
 import AddTask from '@/Component/Task/task';
+
 import Sidebar from '@/Component/Usersidebar/usersidebar';
 
 import React from 'react'
@@ -21,7 +22,7 @@ export default function Home() {
 
       {/* Scrollable Content below Navbar */}
       <div className="mt-[60px] ml-[16.6667%] h-[calc(100vh-60px)] overflow-y-auto p-4 bg-white">
-        <AddTask/>
+      <AddTask/>
       </div>
     </div>
   );
