@@ -1,8 +1,8 @@
 "use client";
+import { FiChevronDown, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { TbCalendarPlus } from "react-icons/tb";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { TbCalendarPlus } from "react-icons/tb";
 import TaskForm from "./craetetask";
 import EventPage from "./event";
 import SchedualPage from "./schedual";
@@ -19,21 +19,9 @@ const categoryColors = {
 };
 
 const tabs = [
-  {
-    label: "Event",
-    key: "Event",
-    content: <TaskForm />,
-  },
-  {
-    label: "Task",
-    key: "Task",
-    content: <EventPage />,
-  },
-  {
-    label: "Schedule Meeting",
-    key: "Schedule",
-    content: <SchedualPage />,
-  },
+  { label: "Event", key: "Event", content: <TaskForm /> },
+  { label: "Task", key: "Task", content: <EventPage /> },
+  { label: "Schedule Meeting", key: "Schedule", content: <SchedualPage /> },
 ];
 
 const eventDates = {
@@ -54,9 +42,7 @@ export default function CalendarPage() {
   useEffect(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const key = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(
-      today.getDate()
-    ).padStart(2, "0")}`;
+    const key = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
     setTodayKey(key);
   }, []);
 
@@ -93,9 +79,10 @@ export default function CalendarPage() {
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown((prev) => !prev)}
-            className="px-5 py-2 rounded-lg border border-[#877575] bg-white text-black font-medium transition duration-200 ease-in-out hover:bg-gray-100 hover:shadow ml-auto"
+            className="flex items-center gap-2 px-5 py-2 rounded-lg border border-[#877575] bg-white text-black font-medium transition duration-200 ease-in-out hover:bg-gray-100 hover:shadow ml-auto"
           >
-            Month
+            Day
+            <FiChevronDown className={`transition-transform duration-300 ${showDropdown ? "rotate-180" : ""}`} />
           </button>
 
           {showDropdown && (
@@ -164,21 +151,21 @@ export default function CalendarPage() {
             if (isToday) bgClass = "bg-black text-white";
 
             return (
-              <Link key={day} href={`/day-view?date=${dateKey}`}>
-                <div
-                  className={`h-20 rounded-xl flex flex-col justify-center items-center text-sm font-medium shadow-sm cursor-pointer hover:bg-sky-400 transition ${bgClass}`}
-                >
-                  <span>{day}</span>
-                  <div className="flex gap-1 mt-1">
-                    {events.map((event, idx) => (
-                      <span
-                        key={idx}
-                        className={`w-4 h-4 rounded-sm ${categoryColors[event] || ""} hover:opacity-75`}
-                      ></span>
-                    ))}
-                  </div>
+              <div
+                key={day}
+                className={`h-20 rounded-xl flex flex-col justify-center items-center text-sm font-medium shadow-sm cursor-pointer hover:bg-sky-400 transition ${bgClass}`}
+              >
+               <span className="text-lg md:text-xl font-bold">{day}</span>
+
+                <div className="flex gap-1 mt-1">
+                  {events.map((event, idx) => (
+                    <span
+                      key={idx}
+                      className={`w-4 h-4 rounded-sm ${categoryColors[event] || ""} hover:opacity-75`}
+                    ></span>
+                  ))}
                 </div>
-              </Link>
+              </div>
             );
           })}
 
@@ -222,7 +209,7 @@ export default function CalendarPage() {
 
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-[#058CBF] text-white font-bold px-5 py-2 rounded-lg drop-shadow-lg hover:bg-[#0b7bab] transition"
+          className="flex items-center gap-2 bg-[#058CBF] text-white font-bold px-5 py-2 rounded-lg drop-shadow-lg hover:bg-[#D9D9D9] transition"
         >
           <TbCalendarPlus className="h-5 w-5 text-black" />
           CREATE
@@ -245,9 +232,7 @@ export default function CalendarPage() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`py-2 px-4 font-medium ${
-                    activeTab === tab.key ? "border-b-4 border-[#018ABE]" : "text-black-500"
-                  }`}
+                  className={`py-2 px-4 font-medium ${activeTab === tab.key ? "border-b-4 border-[#018ABE]" : "text-black-500"}`}
                 >
                   {tab.label}
                 </button>

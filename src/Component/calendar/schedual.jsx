@@ -86,7 +86,7 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
         <label className="text-sm text-[#717171] font-Poppins min-w-[50px]">Time :</label>
         <input
           type="text"
-          placeholder="09:00"
+          placeholder="9:00 am"
           maxLength={5}
           value={startTime}
           onChange={(e) => handleTimeInput(e.target.value, setStartTime, setIsStartValid)}
@@ -98,7 +98,7 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
         <span className="text-gray-600">-</span>
         <input
           type="text"
-          placeholder="11:00"
+          placeholder="11:00 am"
           maxLength={5}
           value={endTime}
           onChange={(e) => handleTimeInput(e.target.value, setEndTime, setIsEndValid)}

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import Link from "next/link";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -126,21 +125,21 @@ export default function Calendar() {
             if (isToday) bgClass = "bg-black text-white";
 
             return (
-              <Link key={day} href={`/day-view?date=${dateKey}`}>
-                <div
-                  className={`h-16 rounded-lg flex flex-col justify-center items-center text-[10px] font-medium shadow-sm cursor-pointer hover:bg-sky-400 transition ${bgClass}`}
-                >
-                  <span>{day}</span>
-                  <div className="flex gap-[2px] mt-[2px]">
-                    {events.map((event, idx) => (
-                      <span
-                        key={idx}
-                        className={`w-2 h-2 rounded-sm ${categoryColors[event] || ""}`}
-                      ></span>
-                    ))}
-                  </div>
+              <div
+  key={day}
+  className={`h-16 rounded-lg flex flex-col justify-center items-center text-[10px] font-medium shadow-sm ${bgClass} hover:bg-blue-200 transition duration-200 cursor-pointer`}
+>
+
+                <span className="text-lg font-bold">{day}</span>
+                <div className="flex gap-[2px] mt-[2px]">
+                  {events.map((event, idx) => (
+                    <span
+                      key={idx}
+                      className={`w-3 h-3 ${categoryColors[event] || ""}`}
+                    ></span>
+                  ))}
                 </div>
-              </Link>
+              </div>
             );
           })}
 
