@@ -1,13 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { LuCalendarClock } from 'react-icons/lu';
 import { IoMdArrowDropdown } from 'react-icons/io';
+import toast from 'react-hot-toast';
 
 export default function SchedualPage({ initialDate, addEvent, closeModal }) {
-  const router = useRouter();
-
   const [selectedDate, setSelectedDate] = useState(initialDate || '');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -47,6 +45,7 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
   const handleSchedule = () => {
     if (isStartValid && isEndValid && selectedDate && startTime && endTime && title) {
       addEvent(selectedDate, 'Meeting');
+      toast.success('Meeting scheduled successfully!');
       console.log({
         date: selectedDate,
         startTime,
@@ -55,7 +54,7 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
       });
       closeModal();
     } else {
-      alert('Please enter valid time, date, and title.');
+      toast.error('Please enter valid time, date, and title.');
     }
   };
 
@@ -71,18 +70,16 @@ export default function SchedualPage({ initialDate, addEvent, closeModal }) {
     <div className="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
       {/* Date */}
       <div className="mb-4">
-  <label className="flex items-center text-sm text-gray-600 font-medium gap-2 mb-1">
-    <LuCalendarClock className="text-xl" />
-    <input
-      type="date"
-      value={selectedDate}
-      onChange={(e) => setSelectedDate(e.target.value)}
-      className="ml-2 w-full max-w-[180px] focus:outline-none py-1 text-sm text-gray-700 rounded px-2  appearance-none"
-    />
-  </label>
-</div>
-
-
+        <label className="flex items-center text-sm text-gray-600 font-medium gap-2 mb-1">
+          <LuCalendarClock className="text-xl" />
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="ml-2 w-full max-w-[180px] focus:outline-none py-1 text-sm text-gray-700 rounded px-2 appearance-none"
+          />
+        </label>
+      </div>
 
       {/* Time */}
       <div className="flex items-center gap-2 mb-4 border-b pb-2">

@@ -1,13 +1,12 @@
 "use client";
 
+
+
+
 import React from 'react'
-
-
-
-import Yearcalendar from '@/Component/calendardropdown/yearcalendar';
 import Sidebar from '@/Component/Usersidebar/usersidebar';
 import NavBar from '@/Component/Navbar/navbar';
-
+import Yearcalendar from '@/Component/calendardropdown/yearcalendar';
 export default function Home() {
     return (
         <div className="h-screen overflow-hidden"> {/* Prevent page scroll */}
@@ -18,7 +17,7 @@ export default function Home() {
 
             {/* Navbar - Fixed*/}
             <div className="fixed top-0 right-0 w-5/6 ml-[16.6667%] z-10">
-            <NavBar/>
+                <NavBar/>
             </div>
 
             {/* Scrollable Content below Navbar */}

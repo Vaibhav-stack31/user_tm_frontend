@@ -22,9 +22,9 @@ export default function TaskForm() {
   const [selectedTime, setSelectedTime] = useState("");  // Added state for time picker
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100"> {/* Flexbox centering */}
+    <div className="flex items-center justify-center min-h-auto bg-gray-100"> {/* Flexbox centering */}
       <div className="w-full max-w-lg mx-auto p-6 bg-white rounded-md shadow-md"> {/* Custom width */}
-        <h2 className="text-xl font-bold mb-4">TASK</h2>
+       
 
         {/* Note Input */}
         <div className="mb-4">

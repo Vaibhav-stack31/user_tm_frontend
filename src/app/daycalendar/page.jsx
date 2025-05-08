@@ -5,7 +5,6 @@ import ToDo from '@/Component/calendardropdown/todo';
 import NavBar from '@/Component/Navbar/navbar';
 import Sidebar from '@/Component/Usersidebar/usersidebar';
 
-
 import React from 'react';
 
 export default function Home() {

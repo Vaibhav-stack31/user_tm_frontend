@@ -72,8 +72,24 @@ export default function Calendar() {
 
       {/* Calendar */}
       <div className="bg-white rounded-xl shadow p-2">
-        <div className="text-lg font-bold text-gray-800 mb-2 text-center">
-          {currentDate.toLocaleString("default", { month: "long", year: "numeric" })}
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-lg font-bold text-gray-800">
+            {currentDate.toLocaleString("default", { month: "long", year: "numeric" })}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleMonthChange(-1)}
+              className="p-1 rounded hover:bg-gray-200 transition"
+            >
+              <FiChevronLeft size={20} />
+            </button>
+            <button
+              onClick={() => handleMonthChange(1)}
+              className="p-1 rounded hover:bg-gray-200 transition"
+            >
+              <FiChevronRight size={20} />
+            </button>
+          </div>
         </div>
 
         <div className="py-2">
