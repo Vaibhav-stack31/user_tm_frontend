@@ -1,10 +1,11 @@
-import Userloginpage from "@/component/userloginpage/userloginpage";
+import Userloginpage from "@/Component/Userloginpage/userloginpage";
+
 
 
 export default function Home() {
   return (
    <div>
-    <Userloginpage/>
+  <Userloginpage/>
    </div>
     
   );

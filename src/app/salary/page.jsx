@@ -1,7 +1,7 @@
 
 import NavBar from "@/Component/Navbar/navbar";
 import SalarySlipPage from "@/Component/Salary/salaryslip";
-import Payslip from "@/Component/Salary/salaryslip";
+
 
 import Sidebar from "@/Component/Usersidebar/usersidebar";
 import React from "react";
@@ -29,8 +29,6 @@ function page() {
 
 
 
-        {/* Mobile View */}
-        <main className="block md:hidden"></main>
 
       </div>
 

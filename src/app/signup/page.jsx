@@ -1,7 +1,7 @@
 
+
+
 import Signup from '@/Component/usersignup/usersignup';
-
-
 import React from 'react'
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
     <div>
       {/* Desktop view (hidden on mobile) */}
       <div className="block">
-       <Signup/>
+   <Signup/>
       </div>
 
       {/* Mobile view (hidden on desktop) */}

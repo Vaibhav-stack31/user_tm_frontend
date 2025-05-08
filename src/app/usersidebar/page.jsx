@@ -1,9 +1,10 @@
-import Sidebar from "@/component/usersidebar/usersidebar";
+import Sidebar from "@/Component/Usersidebar/usersidebar";
+
 
 export default function Home() {
   return (
    <div>
-    <Sidebar/>
+  <Sidebar/>
    </div>
     
   );
